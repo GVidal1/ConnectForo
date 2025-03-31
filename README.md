@@ -1,2 +1,3 @@
 # Grupo7
-Proyecto Grupo 7
+Caso de Estudio:
+ConnectForo SPA
