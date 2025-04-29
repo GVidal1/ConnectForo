@@ -8,9 +8,15 @@
     <version>3.4.5</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
+
+    <modules>
+        <module>microservicio-categorias</module>
+    </modules>
+
     <groupId>com.microservicios.connectforo</groupId>
     <artifactId>microservicios-connectforo</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
   <name>microservicios-connectforo</name>
   <description>Projecto Maven con SpringBoot como repositorio padre de los modulos de microservicios</description>
   <url/>
