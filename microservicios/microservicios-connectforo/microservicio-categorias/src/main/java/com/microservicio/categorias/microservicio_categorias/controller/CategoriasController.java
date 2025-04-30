@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.microservicio.categorias.microservicio_categorias.services.CategoriasService;
 
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +38,7 @@ public class CategoriasController {
     }
 
     @PostMapping()
-    public ResponseEntity<Categorias> crearCategorias(@RequestBody Categorias categoria) {
+    public ResponseEntity<Categorias> crearCategorias(@RequestBody @Valid Categorias categoria) {
         return ResponseEntity.ok(categoriasService.guardarCategoria(categoria));
     }
 
@@ -48,7 +50,7 @@ public class CategoriasController {
     @PutMapping("/{id}")
     public ResponseEntity<Categorias> actualizarCategoria(
         @PathVariable Long id,
-        @RequestBody Categorias categoria) {
+        @RequestBody @Valid Categorias categoria) {
         
         return ResponseEntity.ok(categoriasService.actualizarCategorias(id, categoria));
     }
