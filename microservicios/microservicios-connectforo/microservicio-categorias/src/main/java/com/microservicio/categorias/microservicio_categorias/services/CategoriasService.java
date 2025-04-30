@@ -25,22 +25,27 @@ public class CategoriasService {
     return categoriasRepository.findById(idCategoria).orElseThrow(() -> new RuntimeException("Categoria no encontrada en la base de datos"));
   }
 
-  public String guardarCategoria(Categorias categoria) {
+  public Categorias guardarCategoria(Categorias categoria) {
     categoriasRepository.save(categoria);
-    return "Categoria guardada correctamente";
+    return categoria;
   }
 
-  public String borrarCategoria(Categorias categoria) {
+  public Categorias borrarCategoria(Categorias categoria) {
     categoriasRepository.delete(categoria);
 
-    return "Categoria eliminada correctamente";
+    return categoria;
   }
 
-  public Categorias actualizarCategorias(Categorias categorias) {
-    Categorias categoriaActual = categoriasRepository.findById(categorias.getId()).orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+  public Categorias actualizarCategorias(Long id, Categorias categoriaActualizada) {
+    Categorias categoriaActual = categoriasRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
 
-    categoriaActual.setTitulo(categorias.getTitulo());
-    categoriaActual.setDescripcion(categorias.getDescripcion());
+    if(categoriaActualizada.getTitulo() != null) {
+        categoriaActual.setTitulo(categoriaActualizada.getTitulo());
+    }
+    if(categoriaActualizada.getDescripcion() != null) {
+        categoriaActual.setDescripcion(categoriaActualizada.getDescripcion());
+    }
 
     return categoriasRepository.save(categoriaActual);
   }
