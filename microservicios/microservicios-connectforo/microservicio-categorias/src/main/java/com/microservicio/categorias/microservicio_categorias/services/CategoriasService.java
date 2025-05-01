@@ -30,10 +30,10 @@ public class CategoriasService {
     return categoria;
   }
 
-  public Categorias borrarCategoria(Categorias categoria) {
-    categoriasRepository.delete(categoria);
+  public String borrarCategoria(Long idCategoria) {
+    categoriasRepository.deleteById(idCategoria);
 
-    return categoria;
+    return "Categoria Eliminada";
   }
 
   public Categorias actualizarCategorias(Long id, Categorias categoriaActualizada) {
