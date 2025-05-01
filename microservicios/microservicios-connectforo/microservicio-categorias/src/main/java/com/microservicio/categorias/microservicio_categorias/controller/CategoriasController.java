@@ -5,6 +5,7 @@ import com.microservicio.categorias.microservicio_categorias.model.Categorias;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import com.microservicio.categorias.microservicio_categorias.services.Categorias
 
 import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,8 +45,13 @@ public class CategoriasController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Categorias> buscarCategoriaPorId(@PathVariable Long idCategoria) {
-        return ResponseEntity.ok(categoriasService.buscarCategoria(idCategoria));
+    public ResponseEntity<?> buscarCategoriaPorId(@PathVariable Long id) {
+        try {
+            Categorias categoria = categoriasService.buscarCategoria(id);
+            return ResponseEntity.ok(categoria);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
     
     @PutMapping("/{id}")
@@ -55,6 +62,15 @@ public class CategoriasController {
         return ResponseEntity.ok(categoriasService.actualizarCategorias(id, categoria));
     }
 
-    
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarCategoria(@PathVariable Long id) {
+        try {
+            Categorias categoria = categoriasService.buscarCategoria(id);
+            String resultado = categoriasService.borrarCategoria(id);
+            return ResponseEntity.ok(resultado);
+        } catch (RuntimeException e) {
+            // return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }
