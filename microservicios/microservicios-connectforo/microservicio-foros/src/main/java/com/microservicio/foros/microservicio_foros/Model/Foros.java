@@ -29,6 +29,7 @@ public class Foros {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //Id de otro microservicio para luego buscarlo y llamarlo :)
     @NotBlank(message = "El id de la categoria no puede estar vacío")
     @Column(name = "id_categoria", nullable = false)
     private Long idCategoria;
