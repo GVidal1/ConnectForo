@@ -1,6 +1,5 @@
 package com.microservicio.categorias.microservicio_categorias.controller;
 
-import com.microservicio.categorias.microservicio_categorias.http.response.ForosPorCategoriasResponse;
 import com.microservicio.categorias.microservicio_categorias.model.Categorias;
 
 import java.util.List;
@@ -38,16 +37,6 @@ public class CategoriasController {
         }
 
         return ResponseEntity.ok(categoriasDisponibles);
-    }
-
-    @GetMapping("/foros")
-    public ResponseEntity<List<ForosPorCategoriasResponse>> getAllCategoriasConForos() {
-        return ResponseEntity.ok(categoriasService.obtenerCategoriasConForos());
-    }
-
-    @GetMapping("/{id}/foros")
-    public ResponseEntity<?> obtenerCategoriasYForos(@PathVariable Long id) {
-        return ResponseEntity.ok(categoriasService.buscarForosPorCategorias(id));
     }
 
     @PostMapping()
