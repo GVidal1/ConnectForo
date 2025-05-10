@@ -16,11 +16,12 @@ public class UserService {
     }
 
 
-    public Usuario crearUsuario(String user, String pass) {
+    public Usuario crearUsuario(String user, String pass, String corr) {
         
         Usuario user1 = new Usuario();
         user1.setUserName(user);
         user1.setPassword(pass);
+        user1.setCorreo(corr);
     
 
         return usuarioRepository.save(user1);
