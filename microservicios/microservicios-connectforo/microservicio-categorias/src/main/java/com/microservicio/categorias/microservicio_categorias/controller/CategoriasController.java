@@ -41,7 +41,7 @@ public class CategoriasController {
 
     @PostMapping()
     public ResponseEntity<Categorias> crearCategorias(@RequestBody @Valid Categorias categoria) {
-        return ResponseEntity.ok(categoriasService.guardarCategoria(categoria));
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoriasService.guardarCategoria(categoria));
     }
 
     @GetMapping("/{id}")
@@ -55,11 +55,15 @@ public class CategoriasController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Categorias> actualizarCategoria(
+    public ResponseEntity<?> actualizarCategoria(
         @PathVariable Long id,
         @RequestBody @Valid Categorias categoria) {
-        
-        return ResponseEntity.ok(categoriasService.actualizarCategorias(id, categoria));
+        try {
+            Categorias categoriaActualizada = categoriasService.actualizarCategorias(id, categoria);
+            return ResponseEntity.ok(categoriaActualizada);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
