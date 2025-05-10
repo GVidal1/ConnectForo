@@ -25,7 +25,7 @@ public class UsuarioModel {
     @Column(nullable = false,length = 40 )
     private String password;
 
-    @Column
+    @Column(name = "Correo Electronico", nullable = false, unique = true , length = 100)
     private String correo;
 
 
