@@ -35,16 +35,6 @@ public class ForosController {
         return ResponseEntity.ok(forosDisponibles);
     }
 
-    @PostMapping()
-    public ResponseEntity<?> crearForo(@RequestBody @Valid Foros foro) {
-        try {
-            Foros foroGuardado = forosService.guardarForo(foro);
-            return ResponseEntity.status(HttpStatus.CREATED).body(foroGuardado);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error al crear el foro: " + e.getMessage());
-        }
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarCategoriaPorId(@PathVariable Long id) {
         try {
@@ -54,34 +44,36 @@ public class ForosController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-    
+
+    @PostMapping()
+    public ResponseEntity<?> crearForo(@RequestBody @Valid Foros foro) {
+        try {
+            Foros foroGuardado = forosService.guardarForo(foro);
+            return ResponseEntity.status(HttpStatus.CREATED).body(foroGuardado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body("Error al crear el foro: " + e.getMessage());
+        }
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Foros> actualizarCategoria(
+    public ResponseEntity<?> actualizarCategoria(
         @PathVariable Long id,
         @RequestBody @Valid Foros foro) {
-        
-        return ResponseEntity.ok(forosService.actualizarForo(id, foro));
+        try {
+            Foros foroAct = forosService.actualizarForo(id, foro);
+            return ResponseEntity.ok(foroAct);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body("Error al actualizar el foro: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarCategoria(@PathVariable Long id) {
+    public ResponseEntity<?> eliminarCategoria(@PathVariable Long id) {
         try {
-            Foros foro = forosService.buscarForos(id);
             String resultado = forosService.borrarForo(id);
-            return ResponseEntity.ok(resultado);
+            return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
-            // return ResponseEntity.notFound().build();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-    }
-
-    @GetMapping("/categorias/{idCategoria}")
-    public ResponseEntity<List<Foros>> buscarForosPorIdCategoria(@PathVariable Long idCategoria) {
-        List<Foros> forosDisponibles = forosService.buscarForoPorIdCategoria(idCategoria);
-        if (forosDisponibles.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(forosDisponibles);
     }
 }
