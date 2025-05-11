@@ -39,11 +39,11 @@ public class Post {
   private String contenido;
 
   @NotNull(message = "El ID del foro no puede ser nulo")
-  @Column(name = "id_foro", nullable = false)
+  @Column(name = "id_foro", nullable = false, updatable = false)
   private Long idForo;
 
   @NotNull(message = "El ID del usuario no puede ser nulo")
-  @Column(name = "id_usuario", nullable = false)
+  @Column(name = "id_usuario", nullable = false, updatable = false)
   private Long idUsuario;
 
   @Column(name = "fecha_creacion", updatable = false)
