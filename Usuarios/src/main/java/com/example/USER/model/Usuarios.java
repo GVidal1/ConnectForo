@@ -29,7 +29,7 @@ public class Usuarios {
     @NotBlank(message = "El nombre de usuario no puede estar vacio")
     @Size(min = 3, max = 60, message = "El nombre de usuario debe de contener entre 3 a 60 caracteres.")
     @Column(name = "nombre_usuario", nullable = false, unique = true, length = 100)
-    private String nombreUsario;
+    private String nombreUsuario;
 
     @NotBlank(message = "La contraseña no puede estar vacía.")
     @Size(min = 3, max = 55, message = "La contraseña debe contener entre 3 a 55 caracteres.")
