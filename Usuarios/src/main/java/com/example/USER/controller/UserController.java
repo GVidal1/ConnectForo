@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.USER.model.UsuarioModel;
+import com.example.USER.model.Usuarios;
 import com.example.USER.service.UserService;
 
 @RestController
@@ -22,8 +22,8 @@ public class UserController {
 private UserService userService;
 
 @GetMapping("/users")
-public ResponseEntity<List<UsuarioModel>> listaDeUsuarios() {
-    List<UsuarioModel> usuarios = userService.listarUsuarios();
+public ResponseEntity<List<Usuarios>> listaDeUsuarios() {
+    List<Usuarios> usuarios = userService.listarUsuarios();
 
     if (usuarios.isEmpty()) {
         return ResponseEntity.noContent().build();
@@ -35,7 +35,7 @@ public ResponseEntity<List<UsuarioModel>> listaDeUsuarios() {
 @PostMapping("/users")
 public ResponseEntity<?> crearUsuario(@RequestParam String userName, @RequestParam String password, @RequestParam String correo) {
     try {
-        UsuarioModel newUser = userService.crearUsuario(userName, password, correo);
+        Usuarios newUser = userService.crearUsuario(userName, password, correo);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     } catch (RuntimeException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
