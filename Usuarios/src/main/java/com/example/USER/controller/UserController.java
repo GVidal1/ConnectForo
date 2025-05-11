@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.USER.model.Usuarios;
 import com.example.USER.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/usuarios")
 public class UserController {
@@ -47,7 +49,7 @@ public class UserController {
 
     // Se cambio el uso de RequestParam por RequetsBody para mantener la contraseña oculta de la url y mandarla atravez del body
     @PostMapping()
-    public ResponseEntity<?> crearUsuario(@RequestBody Usuarios usuarioNuevo) {
+    public ResponseEntity<?> crearUsuario(@RequestBody @Valid Usuarios usuarioNuevo) {
         try {
             Usuarios usuarioGuardado = userService.guardarUsuario(usuarioNuevo);
             return ResponseEntity.status(HttpStatus.CREATED).body(usuarioGuardado);
@@ -60,7 +62,7 @@ public class UserController {
     @PutMapping("/{idUsuario}")
     public ResponseEntity<?> actualizarInformacionUsuario(
         @PathVariable Long idUsuario, 
-        @RequestBody Usuarios nuevaInfoUsuario) {
+        @RequestBody @Valid Usuarios nuevaInfoUsuario) {
         try {
             Usuarios usuarioActualzado = userService.actualizarUsuario(idUsuario, nuevaInfoUsuario);
             return ResponseEntity.ok(usuarioActualzado);
