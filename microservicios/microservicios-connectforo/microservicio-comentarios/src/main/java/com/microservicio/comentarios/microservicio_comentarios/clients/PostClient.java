@@ -18,7 +18,7 @@ public class PostClient {
 
   //metodo para realizar la consunlta de getMapping("id") del microservicio de cliente
   @SuppressWarnings("unchecked")
-  public Map<String, Object> obtenerUsuarioPorId(Long id) {
+  public Map<String, Object> obtenerPostPorId(Long id) {
       return this.webClient.get()
           .uri("/{id}", id)
           .retrieve()
