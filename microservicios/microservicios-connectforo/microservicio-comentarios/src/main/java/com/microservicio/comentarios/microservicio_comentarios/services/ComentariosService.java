@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.microservicio.comentarios.microservicio_comentarios.clients.PostClient;
 import com.microservicio.comentarios.microservicio_comentarios.clients.UsuarioClient;
@@ -28,12 +30,13 @@ public class ComentariosService {
   }
 
   public Comentarios buscarComentarioPorId(Long id) {
-    return comentariosRepository.findById(id).orElseThrow((() -> new RuntimeException("El id del comentario no se encontro en la base de datos.")));
+    return comentariosRepository.findById(id).orElseThrow((() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "El id del comentario no se encontro en la base de datos.")));
   }
 
-  public void borrarComentarioPorId(Long id) {
+  public String borrarComentarioPorId(Long id) {
     Comentarios comentarioActual = buscarComentarioPorId(id);
     comentariosRepository.deleteById(comentarioActual.getId());
+    return "Comentario Eliminado con existo";
   }
 
   public Comentarios guardarComentario(Comentarios comentarioNuevo) {
