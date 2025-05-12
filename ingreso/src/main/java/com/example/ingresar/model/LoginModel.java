@@ -14,12 +14,12 @@ import lombok.NoArgsConstructor;
 public class LoginModel {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    private int idLogin;
+    private int id;
     
     @Column(nullable = false, unique = true)
     private String correo;
     
     @Column(nullable = false)
-    private String contraseña;
+    private String password;
 
 }
