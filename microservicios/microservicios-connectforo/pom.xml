@@ -13,6 +13,7 @@
         <module>microservicio-categorias</module>
         <module>microservicio-foros</module>
         <module>microservicio-post</module>
+        <module>microservicio-comentarios</module>
     </modules>
 
     <groupId>com.microservicios.connectforo</groupId>
