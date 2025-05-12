@@ -31,12 +31,13 @@ public class Comentarios {
   @Column(nullable = false)
   private String contenido;
 
+  // PROTEGIDOS CON UPDATABLE
   @NotNull(message = "El id de la publicación no puede estar vacío.")
-  @Column(name = "id_publicacion", nullable = false)
+  @Column(name = "id_publicacion", nullable = false, updatable = false)
   private Long idPost;
 
   @NotNull(message = "El id del usuario no puede estar vacío.")
-  @Column(name = "id_usuario", nullable = false)
+  @Column(name = "id_usuario", nullable = false, updatable = false)
   private Long idUsuario;
 
   @Column(name = "fecha_creacion", updatable = false)
