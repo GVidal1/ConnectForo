@@ -12,27 +12,14 @@ import com.example.USER.repository.UsuarioRepository;
 public class UserService {
 
     @Autowired
-<<<<<<< HEAD
-    private UsuarioRepository usuarioRepository;
-=======
         private UsuarioRepository usuarioRepository;
->>>>>>> 0d39f00d78eadc7b2f9f3ad3e912f5053ad9f81d
 
     public List<Usuarios> listarUsuarios() {
         return usuarioRepository.findAll();
     }
 
-<<<<<<< HEAD
-    public Usuarios crearUsuario(String user, String pass, String corr) {
-        Usuarios user1 = new Usuarios();
-        user1.setNombreUsario(user);
-        user1.setPassword(pass);
-        user1.setCorreo(corr);
-        return usuarioRepository.save(user1);
-=======
     public Usuarios obtenerUsuarioPorId(Long idUsuario) {
         return usuarioRepository.findById(idUsuario).orElseThrow(() -> new RuntimeException("No se ha encontrado en usuario con ese ID."));
->>>>>>> 0d39f00d78eadc7b2f9f3ad3e912f5053ad9f81d
     }
 
     

@@ -26,19 +26,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-<<<<<<< HEAD
-    @GetMapping("/users")
-    public ResponseEntity<List<Usuarios>> listaDeUsuarios() {
-        List<Usuarios> usuarios = userService.listarUsuarios();
-        return ResponseEntity.ok(usuarios);
-    }
-
-    @PostMapping("/users")
-    public ResponseEntity<?> crearUsuario(@RequestParam String userName, @RequestParam String password, @RequestParam String correo) {
-        try {
-            UsuarioModel newUser = userService.crearUsuario(userName, password, correo);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
-=======
     @GetMapping()
     public ResponseEntity<List<Usuarios>> listaDeUsuarios() {
         List<Usuarios> usuarios = userService.listarUsuarios();
@@ -91,13 +78,8 @@ public class UserController {
         try {
             String resultado = userService.borrarUsuario(idUsuario);
             return ResponseEntity.noContent().build();
->>>>>>> 0d39f00d78eadc7b2f9f3ad3e912f5053ad9f81d
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> 0d39f00d78eadc7b2f9f3ad3e912f5053ad9f81d
 }
