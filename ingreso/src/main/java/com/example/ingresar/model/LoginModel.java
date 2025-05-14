@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class LoginModel {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    private long idlogin;
+    private Long idlogin;
     
     @Column(nullable = false, unique = true)
     private String correo;

@@ -1,3 +1,4 @@
+package com.example.ingresar.repository;
 
 
 import com.example.ingresar.model.LoginModel;
@@ -6,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface LoginRepository extends JpaRepository <LoginModel,integer> {
+public interface LoginRepository extends JpaRepository <LoginModel,Long> {
 
 
 }

@@ -16,7 +16,7 @@ public class LoginService {
     @Autowired
     private LoginRepository loginRepository;
 
-    public LoginModel obtenerloginPorId(long idlogin){
+    public LoginModel obtenerloginPorId(Long idlogin){
         return loginRepository.findById(idlogin).orElseThrow(() -> new RuntimeException("No se encontro id"));
     }
 
