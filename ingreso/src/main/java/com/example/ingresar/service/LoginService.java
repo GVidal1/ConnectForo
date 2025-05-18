@@ -1,28 +1,18 @@
 package com.example.ingresar.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.ingresar.model.LoginModel;
-import com.example.ingresar.repository.LoginRepository;
-
+import com.example.ingresar.clients.RegistroClient;
+import com.example.ingresar.model.RegistroModel;
 
 @Service
 public class LoginService {
 
-
     @Autowired
-    private LoginRepository loginRepository;
+    private RegistroClient registroClient;
 
-    public LoginModel obtenerloginPorId(Long idlogin){
-        return loginRepository.findById(idlogin).orElseThrow(() -> new RuntimeException("No se encontro id"));
+    public RegistroModel obtenerRegistroPorId(Long id) {
+        return registroClient.getRegistroPorId(id);
     }
-
-
-    
-
-
-
 }

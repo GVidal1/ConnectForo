@@ -1,6 +1,6 @@
 package com.example.ingresar.model;
 
-
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,23 +12,31 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Table(name = "login")
+@Entity 
+@Table(name="registro") 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Entity
-public class LoginModel {
+public class RegistroModel {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Long id;
-    
-    @Column(nullable = false, unique = true)
+
+    @Column(nullable = false, length = 100)
+    private String nombre;
+
+    @Column(nullable = false)
+    private String apellido;
+
+    @Column(nullable = false)
+    private Date fechaNacimiento;
+
+    @Column(nullable = false)
     private String correo;
-    
+
     @Column(nullable = false)
     private String password;
 
-    //@Column(name = "id_login", nullable = false)
-    //private long id_login;
+
 
 }
