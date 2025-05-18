@@ -21,5 +21,21 @@ public class RegistroController {
         RegistroModel nuevoRegistro = registroService.registrarUsuario(registro);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoRegistro);
     }
+
+    @GetMapping("/{id}")
+public ResponseEntity<?> getRegistroById(@PathVariable Long id) {
+    try {
+        RegistroModel registro = registroService.buscarRegistro(id);
+        return ResponseEntity.ok(registro); 
+    } catch (RuntimeException e) {
+        return ResponseEntity.notFound().build();
+    }
+}
+
+
+
+
+
+
 }
 

@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class RegistroModel {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    private Integer idRegistro;
+    private Long id;
 
     @Column(nullable = false, length = 100)
     private String nombre;
@@ -31,11 +31,11 @@ public class RegistroModel {
     @Column(nullable = false)
     private Date fechaNacimiento;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String correo;
 
-    @Column(nullable = true)
-    private String contraseña;
+    @Column(nullable = false)
+    private String password;
 
 
 
