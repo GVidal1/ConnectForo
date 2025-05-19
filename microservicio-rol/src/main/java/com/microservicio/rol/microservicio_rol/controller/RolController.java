@@ -1,6 +1,8 @@
 package com.microservicio.rol.microservicio_rol.controller;
 
+import com.microservicio.rol.microservicio_rol.clients.UsuarioClient;
 import com.microservicio.rol.microservicio_rol.model.Rol;
+import com.microservicio.rol.microservicio_rol.model.Usuarios;
 import com.microservicio.rol.microservicio_rol.service.RolService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,20 @@ public class RolController {
 
     @Autowired
     private RolService rolService;
+
+    @Autowired
+private UsuarioClient usuarioClient;
+
+@GetMapping("/usuario/{id}")
+public ResponseEntity<?> obtenerUsuario(@PathVariable Long id) {
+    try {
+        Usuarios usuario = usuarioClient.obtenerUsuarioPorId(id);
+        return ResponseEntity.ok(usuario);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+    }
+}
+
 
     @GetMapping
     public ResponseEntity<List<Rol>> listarRoles() {
