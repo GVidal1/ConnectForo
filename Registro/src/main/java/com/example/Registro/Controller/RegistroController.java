@@ -3,6 +3,10 @@ package com.example.Registro.Controller;
 import com.example.Registro.Model.RegistroModel;
 import com.example.Registro.Service.RegistroService;
 import jakarta.validation.Valid;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +41,24 @@ public class RegistroController {
                 .body(e.getMessage());
         }
     }
+
+    @GetMapping("/buscar")
+public ResponseEntity<?> buscarPorNickname(@RequestParam String nickname) {
+    try {
+        RegistroModel registro = registroService.buscarPorNickname(nickname);
+        
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", registro.getId());
+        response.put("nombreUsuario", registro.getNombreUsuario());
+        response.put("correo", registro.getCorreo());
+        
+        return ResponseEntity.ok(response);
+    } catch (RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(e.getMessage());
+    }
+}
 }
 
 

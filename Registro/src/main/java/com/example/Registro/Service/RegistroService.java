@@ -44,5 +44,11 @@ public class RegistroService {
         return registroRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
     }
+
+      
+    public RegistroModel buscarPorNickname(String nickname) {
+        return registroRepository.findByNombreUsuario(nickname)
+            .orElseThrow(() -> new RuntimeException("Usuario con nickname " + nickname + " no encontrado"));
+    }
 }
 
