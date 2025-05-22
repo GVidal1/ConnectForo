@@ -1,12 +1,26 @@
 package com.microservicio.interacciones.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "interacciones")
 public class Interaccion {
     @Id

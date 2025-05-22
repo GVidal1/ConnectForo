@@ -8,16 +8,18 @@
     <version>3.4.5</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
+  <packaging>pom</packaging>
 
     <modules>
-        <module>microservicio-categorias</module>
-        <module>microservicio-foros</module>
+        <module>microservicio-anuncios</module>
+        <module>microservicio-interacciones</module>
+        <module>microservicio-reportes</module>
+        <module>microservicio-soporte</module>
     </modules>
 
     <groupId>com.microservicios.connectforo</groupId>
     <artifactId>microservicios-connectforo</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
   <name>microservicios-connectforo</name>
   <description>Projecto Maven con SpringBoot como repositorio padre de los modulos de microservicios</description>
   <url/>
@@ -53,6 +55,11 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
     </dependency>
 
     <dependency>
