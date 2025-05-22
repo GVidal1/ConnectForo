@@ -1,42 +1,49 @@
 package com.example.Registro.Model;
-import java.util.Date;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity 
-@Table(name="registro") 
+import java.time.LocalDate;
 
+@Entity
+@Table(name = "registro")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegistroModel {
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    private Integer idRegistro;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @NotBlank(message = "El nombre es un campo Obligatio. No puede estar vacio.")
     @Column(nullable = false, length = 100)
     private String nombre;
 
+    @NotBlank(message = "El apellido es un campo Obligatio. No puede estar vacio.")
     @Column(nullable = false)
     private String apellido;
 
+    
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
-    @Column(nullable = true)
+    
+    @NotBlank(message = "El correo es un campo Obligatio. No puede estar vacio.")
+    @Column(name = "correo", nullable = false, unique = true )
     private String correo;
 
-    @Column(nullable = true)
-    private String contraseña;
-
-
-
+    @NotBlank(message = "La contraseña no puede estar vacía.")
+    @Size(min = 3, max = 55, message = "La contraseña debe contener entre 3 a 55 caracteres.")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(nullable = false)
+    private String password;
 }
+

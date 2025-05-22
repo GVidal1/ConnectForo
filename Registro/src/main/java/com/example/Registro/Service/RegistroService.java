@@ -20,5 +20,33 @@ public class RegistroService {
         return registroRepository.save(registro);
     }
 
+    public RegistroModel buscarRegistro(Long id) {
+        return registroRepository.findById(id).orElseThrow(() -> new RuntimeException("Registro no encontrado"));
+    }
+
 }
+
+
+
+
+
+
+
+
+// public Comentarios guardarComentario(Comentarios comentarioNuevo) {
+//     Map<String, Object> verificarPost = postClient.obtenerPostPorId(comentarioNuevo.getIdPost());
+//     Map<String, Object> verificarUsuario = usuarioClient.obtenerUsuarioPorId(comentarioNuevo.getIdUsuario());
+
+//     if (verificarPost == null || verificarPost.isEmpty()) {
+//       throw new RuntimeException("El id de la publicación no se ha encontrado. No se puede crear un comentario.");
+//     }
+
+//     if (verificarUsuario == null || verificarUsuario.isEmpty()) {
+//       throw new RuntimeException("El id del usuario no existe. No es psible realizar un comentario");
+//     }
+
+//     return comentariosRepository.save(comentarioNuevo);
+    
+//   }
+
 
