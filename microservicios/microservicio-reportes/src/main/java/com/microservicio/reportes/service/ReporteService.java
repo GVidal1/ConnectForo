@@ -1,8 +1,8 @@
 package com.microservicio.reportes.service;
 
 import com.microservicio.reportes.exception.ResourceNotFoundException;
-import com.microservicio.reportes.feign.CategoriaClient;
-import com.microservicio.reportes.feign.ForoClient;
+import com.microservicio.reportes.client.CategoriaClient;
+import com.microservicio.reportes.client.ForoClient;
 import com.microservicio.reportes.model.Reporte;
 import com.microservicio.reportes.repository.ReporteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReporteService {
