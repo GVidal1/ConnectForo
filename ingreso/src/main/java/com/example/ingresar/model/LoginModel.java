@@ -1,22 +1,13 @@
 package com.example.ingresar.model;
 
+import jakarta.persistence.*;
+import lombok.*;
 
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Table(name = "login")
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
 @Entity
+@Table(name = "login")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginModel {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
@@ -27,8 +18,4 @@ public class LoginModel {
     
     @Column(nullable = false)
     private String password;
-
-    //@Column(name = "id_login", nullable = false)
-    //private long id_login;
-
 }
