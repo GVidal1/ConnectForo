@@ -53,10 +53,10 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
     
-    <!-- <dependency>
+    <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-openfeign</artifactId>
-    </dependency> -->
+    </dependency>
 
     <!-- dependecia para la comunicion de microservicios -->
     <dependency>
