@@ -35,19 +35,12 @@ public class UserService {
     }
 
 
-    // antiguo metodo que ocuapa el RequestParam
-    // public Usuarios crearUsuario(String user, String pass, String corr) {
-    //     Usuarios user1 = new Usuarios();
-    //     user1.setNombreUsuario(user);
-    //     user1.setPassword(pass);
-    //     user1.setCorreo(corr);
-    //     return usuarioRepository.save(user1);
-    // }
+    
 
     public Usuarios actualizarUsuario(Long idUsuario, Usuarios nuevaInfo){
         Usuarios usuarioActual = obtenerUsuarioPorId(idUsuario);
 
-        // Verifica que los campos no esten vacios (No es necesario el id ya que los toma del metodo obtenerUsuariosPorId ni la fecha de creacion)
+        
         if (nuevaInfo.getNombreUsuario() != null) {
         usuarioActual.setNombreUsuario(nuevaInfo.getNombreUsuario());
         }
