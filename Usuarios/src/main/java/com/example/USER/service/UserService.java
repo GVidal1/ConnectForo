@@ -3,6 +3,7 @@ package com.example.USER.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.USER.model.Usuarios;
@@ -12,41 +13,42 @@ import com.example.USER.repository.UsuarioRepository;
 public class UserService {
 
     @Autowired
-        private UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<Usuarios> listarUsuarios() {
         return usuarioRepository.findAll();
     }
 
     public Usuarios obtenerUsuarioPorId(Long idUsuario) {
-        return usuarioRepository.findById(idUsuario).orElseThrow(() -> new RuntimeException("No se ha encontrado en usuario con ese ID."));
+        return usuarioRepository.findById(idUsuario)
+            .orElseThrow(() -> new RuntimeException("No se ha encontrado un usuario con ese ID."));
     }
 
-    
     public String borrarUsuario(Long id) {
         Usuarios usuarioAct = obtenerUsuarioPorId(id);
         usuarioRepository.deleteById(usuarioAct.getId());
         return "Se ha eliminado el usuario correctamente.";
     }
-    
+
     public Usuarios guardarUsuario(Usuarios nuevoUsuario) {
-        usuarioRepository.save(nuevoUsuario);
-        return nuevoUsuario;
+        
+        nuevoUsuario.setPassword(passwordEncoder.encode(nuevoUsuario.getPassword()));
+        return usuarioRepository.save(nuevoUsuario);
     }
 
-
-    
-
-    public Usuarios actualizarUsuario(Long idUsuario, Usuarios nuevaInfo){
+    public Usuarios actualizarUsuario(Long idUsuario, Usuarios nuevaInfo) {
         Usuarios usuarioActual = obtenerUsuarioPorId(idUsuario);
 
-        
         if (nuevaInfo.getNombreUsuario() != null) {
-        usuarioActual.setNombreUsuario(nuevaInfo.getNombreUsuario());
+            usuarioActual.setNombreUsuario(nuevaInfo.getNombreUsuario());
         }
 
         if (nuevaInfo.getPassword() != null) {
-            usuarioActual.setPassword(nuevaInfo.getPassword());
+           
+            usuarioActual.setPassword(passwordEncoder.encode(nuevaInfo.getPassword()));
         }
 
         if (nuevaInfo.getCorreo() != null) {

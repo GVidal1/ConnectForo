@@ -2,13 +2,9 @@ package com.example.USER.model;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -26,25 +22,28 @@ public class Usuarios {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El nombre de usuario no puede estar vacio")
-    @Size(min = 3, max = 60, message = "El nombre de usuario debe de contener entre 3 a 60 caracteres.")
+    @NotBlank(message = "El nombre de usuario no puede estar vacío.")
+    @Size(min = 3, max = 60, message = "El nombre de usuario debe contener entre 3 y 60 caracteres.")
     @Column(name = "nombre_usuario", nullable = false, unique = true, length = 100)
     private String nombreUsuario;
 
     @NotBlank(message = "La contraseña no puede estar vacía.")
-    @Size(min = 3, max = 55, message = "La contraseña debe contener entre 3 a 55 caracteres.")
-    @Column(nullable = false, length = 40 )
+    @Size(min = 3, max = 100, message = "La contraseña debe contener entre 3 y 100 caracteres (encriptada).")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(nullable = false, length = 100)
     private String password;
 
-    @NotBlank(message = "El correo es un campo Obligatio. No puede estar vacio.")
-    @Column(name = "correo", nullable = false, unique = true )
+    @NotBlank(message = "El correo no puede estar vacío.")
+    @Email(message = "El correo debe tener un formato válido.")
+    @Column(name = "correo", nullable = false, unique = true)
     private String correo;
 
     @Column(name = "fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion;
 
     @PrePersist
-    protected void creacionFecha() {
+    protected void onCreate() {
         this.fechaCreacion = LocalDateTime.now();
     }
 }
+
