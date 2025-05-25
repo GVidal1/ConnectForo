@@ -22,8 +22,7 @@ public class RegistroClient {
         this.webClient = WebClient.builder()
                 .baseUrl(registroServiceUrl)
                 .clientConnector(new ReactorClientHttpConnector(
-                    HttpClient.create()
-                        .responseTimeout(Duration.ofSeconds(5))
+                    HttpClient.create().responseTimeout(Duration.ofSeconds(5))
                 ))
                 .build();
     }
@@ -47,15 +46,32 @@ public class RegistroClient {
     }
 
     private UsuarioResponseDTO convertirMapADTO(Map<String, Object> map) {
+        System.out.println("MAPA RECIBIDO: " + map); // útil para debug
+
         UsuarioResponseDTO dto = new UsuarioResponseDTO();
-        dto.setId(map.get("id") instanceof Integer ? 
-                 ((Integer) map.get("id")).longValue() : 
-                 (Long) map.get("id"));
+
+        Object idObj = map.get("id");
+        if (idObj instanceof Integer) {
+            dto.setId(((Integer) idObj).longValue());
+        } else if (idObj instanceof Long) {
+            dto.setId((Long) idObj);
+        } else if (idObj instanceof String) {
+            try {
+                dto.setId(Long.parseLong((String) idObj));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("ID no es convertible a Long: " + idObj);
+            }
+        } else {
+            throw new IllegalArgumentException("ID no reconocido: " + idObj);
+        }
+
         dto.setNombreUsuario((String) map.get("nombreUsuario"));
         dto.setCorreo((String) map.get("correo"));
+
         return dto;
     }
 }
+
     
     
 
