@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,6 +26,9 @@ public class Usuarios {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull(message = "El id del rol no puede estar vacio")
+    private Long idRol;
 
     @NotBlank(message = "El nombre de usuario no puede estar vacio")
     @Size(min = 3, max = 60, message = "El nombre de usuario debe de contener entre 3 a 60 caracteres.")
@@ -44,7 +48,7 @@ public class Usuarios {
     private LocalDateTime fechaCreacion;
 
     @PrePersist
-    protected void creacionFecha() {
+    protected void inicializacionDatos() {
         this.fechaCreacion = LocalDateTime.now();
     }
 }
