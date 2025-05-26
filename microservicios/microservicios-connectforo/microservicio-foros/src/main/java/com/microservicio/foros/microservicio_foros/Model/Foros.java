@@ -41,8 +41,8 @@ public class Foros {
     @Column(nullable = false, unique = true)
     private String titulo;
 
-    @Size(max = 500, message = "La descripción no puede exceder los 500 caracteres")
-    private String descripcion;
+    @Size(max = 500, message = "La descripción no puede exceder los 5000 caracteres")
+    private String contenido;
 
     @Column(name = "fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion;

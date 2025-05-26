@@ -60,8 +60,8 @@ public class ForosService {
         foroActual.setTitulo(foroActualizado.getTitulo());
     }
 
-    if (foroActualizado.getDescripcion() != null) {
-        foroActual.setDescripcion(foroActualizado.getDescripcion());
+    if (foroActualizado.getContenido() != null) {
+        foroActual.setContenido(foroActualizado.getContenido());
     }
 
     if (foroActualizado.getIdCategoria() != null) {
