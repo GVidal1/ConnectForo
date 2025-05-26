@@ -47,7 +47,6 @@ public class UserController {
         }
     }
 
-    // Se cambio el uso de RequestParam por RequetsBody para mantener la contraseña oculta de la url y mandarla atravez del body
     @PostMapping()
     public ResponseEntity<?> crearUsuario(@RequestBody @Valid Usuarios usuarioNuevo) {
         try {
@@ -58,7 +57,6 @@ public class UserController {
         }
     }
 
-    // Se ocupa pathvariable para modificar a un usuario en concreto y el obj usuario para pasarlo al metodo de service
     @PutMapping("/{idUsuario}")
     public ResponseEntity<?> actualizarInformacionUsuario(
         @PathVariable Long idUsuario, 
@@ -72,7 +70,7 @@ public class UserController {
     }
 
 
-    // NO borrar la variable de resultado. Este verifica si existe y si es asi lo borra.
+    
     @DeleteMapping("/{idUsuario}")
     public ResponseEntity<?> borrarUsuarioPorId(@PathVariable Long idUsuario) {
         try {
