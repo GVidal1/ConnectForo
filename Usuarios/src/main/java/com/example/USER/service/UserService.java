@@ -1,10 +1,12 @@
 package com.example.USER.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.USER.client.RolClient;
 import com.example.USER.model.Usuarios;
 import com.example.USER.repository.UsuarioRepository;
 
@@ -12,7 +14,10 @@ import com.example.USER.repository.UsuarioRepository;
 public class UserService {
 
     @Autowired
-        private UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private RolClient rolClient;
 
     public List<Usuarios> listarUsuarios() {
         return usuarioRepository.findAll();
@@ -30,11 +35,13 @@ public class UserService {
     }
     
     public Usuarios guardarUsuario(Usuarios nuevoUsuario) {
+        Map<String, Object> verificarRol = rolClient.obtenerRolPorId(nuevoUsuario.getIdRol());
+        if (verificarRol == null || verificarRol.isEmpty()) {
+            throw new RuntimeException("El id de la publicación no se ha encontrado. No se puede crear un comentario.");
+        }
         usuarioRepository.save(nuevoUsuario);
         return nuevoUsuario;
     }
-
-
     
 
     public Usuarios actualizarUsuario(Long idUsuario, Usuarios nuevaInfo){
