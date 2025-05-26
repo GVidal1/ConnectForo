@@ -28,7 +28,6 @@ public class RolService {
 
     public Rol actualizarRol(Long idRol, Rol nuevaInfo) {
         Rol rolActual = obtenerRolPorId(idRol);
-        rolActual.setIdUsuario(nuevaInfo.getIdUsuario());
         rolActual.setTipoRol(nuevaInfo.getTipoRol());
         return rolRepository.save(rolActual);
     }
@@ -44,7 +43,6 @@ public class RolService {
 
     public Rol asignarRolAUsuario(Long idUsuario, Rol.TipoRol tipoRol) {
         Rol rol = new Rol();
-        rol.setIdUsuario(idUsuario);
         rol.setTipoRol(tipoRol);
         return rolRepository.save(rol);
     }

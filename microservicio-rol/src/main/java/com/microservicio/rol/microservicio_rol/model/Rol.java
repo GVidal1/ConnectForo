@@ -26,9 +26,6 @@ public class Rol {
     @Column(name = "id_rol", nullable = false, updatable = false)
     private Long idRol;
 
-    @Column(name = "id_usuario", nullable = false)
-    private Long idUsuario;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_rol", nullable = false)
     private TipoRol tipoRol;
