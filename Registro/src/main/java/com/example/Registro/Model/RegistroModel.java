@@ -44,7 +44,7 @@ public class RegistroModel {
     private String correo;
     
     @NotBlank(message = "La contraseña no puede estar vacía.")
-    @Size(min = 3, max = 55, message = "La contraseña debe contener entre 3 a 55 caracteres.")
+    @Size(min = 3, max = 100, message = "La contraseña debe contener almenos 3 caracteres.")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
     private String password;

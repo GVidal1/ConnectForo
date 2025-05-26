@@ -28,7 +28,6 @@ public class RolService {
 
     public Rol actualizarRol(Long idRol, Rol nuevaInfo) {
         Rol rolActual = obtenerRolPorId(idRol);
-        rolActual.setIdUsuario(nuevaInfo.getIdUsuario());
         rolActual.setTipoRol(nuevaInfo.getTipoRol());
         return rolRepository.save(rolActual);
     }
@@ -38,13 +37,12 @@ public class RolService {
         return "Rol eliminado correctamente";
     }
 
-    public List<Rol> obtenerRolesPorUsuario(Long idUsuario) {
-        return rolRepository.findByIdUsuario(idUsuario);
-    }
+    // public List<Rol> obtenerRolesPorUsuario(Long idUsuario) {
+    //     return rolRepository.findByIdUsuario(idUsuario);
+    // }
 
     public Rol asignarRolAUsuario(Long idUsuario, Rol.TipoRol tipoRol) {
         Rol rol = new Rol();
-        rol.setIdUsuario(idUsuario);
         rol.setTipoRol(tipoRol);
         return rolRepository.save(rol);
     }

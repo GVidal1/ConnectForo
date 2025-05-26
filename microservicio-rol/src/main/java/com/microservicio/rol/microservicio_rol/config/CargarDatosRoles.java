@@ -14,11 +14,11 @@ public class CargarDatosRoles {
         return args -> {
             if (rolRepository.count() == 0) {
                 
-                rolRepository.save(new Rol(null, 1L, Rol.TipoRol.ADMIN));
-                rolRepository.save(new Rol(null, 2L, Rol.TipoRol.MODERADOR));
-                rolRepository.save(new Rol(null, 3L, Rol.TipoRol.SOPORTE));
-                rolRepository.save(new Rol(null, 4L, Rol.TipoRol.GESTOR_ANUNCIOS));
-                rolRepository.save(new Rol(null, 5L, Rol.TipoRol.USUARIO));
+                rolRepository.save(new Rol(null, Rol.TipoRol.ADMIN));
+                rolRepository.save(new Rol(null,  Rol.TipoRol.MODERADOR));
+                rolRepository.save(new Rol(null,  Rol.TipoRol.SOPORTE));
+                rolRepository.save(new Rol(null,  Rol.TipoRol.GESTOR_ANUNCIOS));
+                rolRepository.save(new Rol(null,  Rol.TipoRol.USUARIO));
                 
                 System.out.println("Datos de roles cargados .");
             }
