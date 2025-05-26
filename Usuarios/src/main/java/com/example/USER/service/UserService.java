@@ -49,20 +49,29 @@ public class UserService {
     }
 
     public Usuarios actualizarUsuario(Long idUsuario, Usuarios nuevaInfo) {
-        Usuarios usuarioActual = obtenerUsuarioPorId(idUsuario);
+    Usuarios usuarioActual = obtenerUsuarioPorId(idUsuario);
 
-        if (nuevaInfo.getNombreUsuario() != null) {
-            usuarioActual.setNombreUsuario(nuevaInfo.getNombreUsuario());
-        }
-
-        if (nuevaInfo.getPassword() != null) {
-            usuarioActual.setPassword(passwordEncoder.encode(nuevaInfo.getPassword()));
-        }
-
-        if (nuevaInfo.getCorreo() != null) {
-            usuarioActual.setCorreo(nuevaInfo.getCorreo());
-        }
-
-        return usuarioRepository.save(usuarioActual);
+    if (nuevaInfo.getNombreUsuario() != null) {
+        usuarioActual.setNombreUsuario(nuevaInfo.getNombreUsuario());
     }
+
+    if (nuevaInfo.getPassword() != null) {
+        usuarioActual.setPassword(passwordEncoder.encode(nuevaInfo.getPassword()));
+    }
+
+    if (nuevaInfo.getCorreo() != null) {
+        usuarioActual.setCorreo(nuevaInfo.getCorreo());
+    }
+
+    if (nuevaInfo.getIdRol() != null) {
+        Map<String, Object> verificarRol = rolClient.obtenerRolPorId(nuevaInfo.getIdRol());
+        if (verificarRol == null || verificarRol.isEmpty()) {
+            throw new RuntimeException("El rol con ID " + nuevaInfo.getIdRol() + " no existe. No se puede actualizar el usuario.");
+        }
+        usuarioActual.setIdRol(nuevaInfo.getIdRol());
+    }
+
+    return usuarioRepository.save(usuarioActual);
+}
+
 }
