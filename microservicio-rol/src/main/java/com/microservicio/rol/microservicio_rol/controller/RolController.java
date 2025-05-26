@@ -49,21 +49,21 @@ public class RolController {
     }
 
     // Endpoint para obtener roles de un usuario específico
-    @GetMapping("/usuario/{idUsuario}")
-    public ResponseEntity<?> obtenerRolesDeUsuario(@PathVariable Long idUsuario) {
-        try {
-            // Verificar que el usuario existe
-            Usuarios usuario = usuarioClient.obtenerUsuarioPorId(idUsuario);
-            if (usuario == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
-            }
+    // @GetMapping("/usuario/{idUsuario}")
+    // public ResponseEntity<?> obtenerRolesDeUsuario(@PathVariable Long idUsuario) {
+    //     try {
+    //         // Verificar que el usuario existe
+    //         Usuarios usuario = usuarioClient.obtenerUsuarioPorId(idUsuario);
+    //         if (usuario == null) {
+    //             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+    //         }
 
-            List<Rol> roles = rolService.obtenerRolesPorUsuario(idUsuario);
-            return ResponseEntity.ok(roles);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener roles: " + e.getMessage());
-        }
-    }
+    //         List<Rol> roles = rolService.obtenerRolesPorUsuario(idUsuario);
+    //         return ResponseEntity.ok(roles);
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener roles: " + e.getMessage());
+    //     }
+    // }
 
     // Resto de los endpoints existentes...
     @GetMapping

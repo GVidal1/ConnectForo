@@ -37,9 +37,9 @@ public class RolService {
         return "Rol eliminado correctamente";
     }
 
-    public List<Rol> obtenerRolesPorUsuario(Long idUsuario) {
-        return rolRepository.findByIdUsuario(idUsuario);
-    }
+    // public List<Rol> obtenerRolesPorUsuario(Long idUsuario) {
+    //     return rolRepository.findByIdUsuario(idUsuario);
+    // }
 
     public Rol asignarRolAUsuario(Long idUsuario, Rol.TipoRol tipoRol) {
         Rol rol = new Rol();
