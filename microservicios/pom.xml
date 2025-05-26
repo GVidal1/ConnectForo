@@ -15,6 +15,14 @@
         <module>microservicio-interacciones</module>
         <module>microservicio-reportes</module>
         <module>microservicio-soporte</module>
+        <module>microservicio-categorias</module>
+        <module>microservicio-foros</module>
+        <module>microservicio-post</module>
+        <module>microservicio-comentarios</module>
+        <module>ingresar</module>
+        <module>microservicio-rol</module>
+        <module>Registro</module>
+        <module>USER</module>
     </modules>
 
     <groupId>com.microservicios.connectforo</groupId>
