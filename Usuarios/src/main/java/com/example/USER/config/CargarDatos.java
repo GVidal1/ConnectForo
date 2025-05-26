@@ -3,6 +3,10 @@ package com.example.USER.config;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 import com.example.USER.model.Usuarios;
 import com.example.USER.repository.UsuarioRepository;
@@ -10,20 +14,37 @@ import com.example.USER.repository.UsuarioRepository;
 @Configuration
 public class CargarDatos {
 
+    
     @Bean
-    CommandLineRunner initDataBase(UsuarioRepository usuariosRepository) {
-        return args -> {
-            // Solo se ejecuta si no hay usuarios en la base de datos
-            if (usuariosRepository.count() == 0) {
-                // Insertamos los usuarios con los datos proporcionados
-                usuariosRepository.save(new Usuarios(null, "gabriel", "password123", "gabriel@duocuc.cl", null));
-                usuariosRepository.save(new Usuarios(null, "francisco", "1234secure", "fran@gmail.com", null));
-                usuariosRepository.save(new Usuarios(null, "mauricio", "miClaveSegura", "maur@gmail.com", null));
-                usuariosRepository.save(new Usuarios(null, "riskoder", "clave123", "risk@gmail.com", null));
-                usuariosRepository.save(new Usuarios(null, "Anonimus", "pass5678", "pedroramirez@example.com", null));
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-                System.out.println("Datos de usuarios cargados correctamente.");
+    
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().permitAll()
+            );
+        return http.build();
+    }
+
+    
+    @Bean
+    CommandLineRunner initDataBase(UsuarioRepository usuariosRepository, PasswordEncoder passwordEncoder) {
+        return args -> {
+            if (usuariosRepository.count() == 0) {
+                usuariosRepository.save(new Usuarios(null, 1L,  "gabriel", passwordEncoder.encode("password123"), "gabriel@duocuc.cl", null));
+                usuariosRepository.save(new Usuarios(null, 2L, "francisco", passwordEncoder.encode("1234secure"), "fran@gmail.com", null));
+                usuariosRepository.save(new Usuarios(null, 3L, "mauricio", passwordEncoder.encode("miClaveSegura"), "maur@gmail.com", null));
+                usuariosRepository.save(new Usuarios(null, 4L, "riskoder", passwordEncoder.encode("clave123"), "risk@gmail.com", null));
+                usuariosRepository.save(new Usuarios(null, 5L,  "Anonimus", passwordEncoder.encode("pass5678"), "pedroramirez@example.com", null));
+
+                System.out.println("✅ Datos de usuarios cargados correctamente con contraseñas encriptadas.");
             }
         };
     }
 }
+

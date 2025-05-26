@@ -1,10 +1,13 @@
 package com.example.USER.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.USER.client.RolClient;
 import com.example.USER.model.Usuarios;
 import com.example.USER.repository.UsuarioRepository;
 
@@ -12,48 +15,48 @@ import com.example.USER.repository.UsuarioRepository;
 public class UserService {
 
     @Autowired
-        private UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RolClient rolClient;
 
     public List<Usuarios> listarUsuarios() {
         return usuarioRepository.findAll();
     }
 
     public Usuarios obtenerUsuarioPorId(Long idUsuario) {
-        return usuarioRepository.findById(idUsuario).orElseThrow(() -> new RuntimeException("No se ha encontrado en usuario con ese ID."));
+        return usuarioRepository.findById(idUsuario)
+            .orElseThrow(() -> new RuntimeException("No se ha encontrado un usuario con ese ID."));
     }
 
-    
     public String borrarUsuario(Long id) {
         Usuarios usuarioAct = obtenerUsuarioPorId(id);
         usuarioRepository.deleteById(usuarioAct.getId());
         return "Se ha eliminado el usuario correctamente.";
     }
-    
+
     public Usuarios guardarUsuario(Usuarios nuevoUsuario) {
-        usuarioRepository.save(nuevoUsuario);
-        return nuevoUsuario;
+        Map<String, Object> verificarRol = rolClient.obtenerRolPorId(nuevoUsuario.getIdRol());
+        if (verificarRol == null || verificarRol.isEmpty()) {
+            throw new RuntimeException("El id de la publicación no se ha encontrado. No se puede crear un comentario.");
+        }
+        
+        nuevoUsuario.setPassword(passwordEncoder.encode(nuevoUsuario.getPassword()));
+        return usuarioRepository.save(nuevoUsuario);
     }
 
-
-    // antiguo metodo que ocuapa el RequestParam
-    // public Usuarios crearUsuario(String user, String pass, String corr) {
-    //     Usuarios user1 = new Usuarios();
-    //     user1.setNombreUsuario(user);
-    //     user1.setPassword(pass);
-    //     user1.setCorreo(corr);
-    //     return usuarioRepository.save(user1);
-    // }
-
-    public Usuarios actualizarUsuario(Long idUsuario, Usuarios nuevaInfo){
+    public Usuarios actualizarUsuario(Long idUsuario, Usuarios nuevaInfo) {
         Usuarios usuarioActual = obtenerUsuarioPorId(idUsuario);
 
-        // Verifica que los campos no esten vacios (No es necesario el id ya que los toma del metodo obtenerUsuariosPorId ni la fecha de creacion)
         if (nuevaInfo.getNombreUsuario() != null) {
-        usuarioActual.setNombreUsuario(nuevaInfo.getNombreUsuario());
+            usuarioActual.setNombreUsuario(nuevaInfo.getNombreUsuario());
         }
 
         if (nuevaInfo.getPassword() != null) {
-            usuarioActual.setPassword(nuevaInfo.getPassword());
+            usuarioActual.setPassword(passwordEncoder.encode(nuevaInfo.getPassword()));
         }
 
         if (nuevaInfo.getCorreo() != null) {
