@@ -1,23 +1,26 @@
 package com.example.ingresar.service;
 
-import org.springframework.stereotype.Service;
+import com.example.ingresar.clients.UsuarioClient;
+import com.example.ingresar.dto.LoginDTO;
 
-import com.example.ingresar.clients.RegistroClient;
-import com.example.ingresar.dto.UsuarioResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 public class LoginService {
-    private final RegistroClient registroClient;
 
-    public LoginService(RegistroClient registroClient) {
-        this.registroClient = registroClient;
-    }
+    @Autowired
+    private UsuarioClient usuarioClient;
 
-    public UsuarioResponseDTO obtenerUsuarioPorId(Long id) {
-        return registroClient.getUsuarioPorId(id);
-    }
-
-    public UsuarioResponseDTO obtenerUsuarioPorNickname(String nickname) {
-        return registroClient.getUsuarioPorNickname(nickname);
+    public Mono<Boolean> iniciarSesion(LoginDTO loginDTO) {
+        return usuarioClient.verificarCredenciales(loginDTO)
+                .doOnSuccess(result -> {
+                    if (result) {
+                        System.out.println("Login exitoso para: " + loginDTO.getCorreo());
+                    } else {
+                        System.out.println("Login fallido para: " + loginDTO.getCorreo());
+                    }
+                });
     }
 }
