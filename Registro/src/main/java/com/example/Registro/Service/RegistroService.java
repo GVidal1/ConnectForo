@@ -1,63 +1,27 @@
 package com.example.Registro.Service;
 
-import com.example.Registro.Model.RegistroModel;
-import com.example.Registro.Repository.RegistroRepository;
 import com.example.Registro.clients.UsuarioClient;
 import com.example.Registro.dto.UsuarioDTO;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class RegistroService {
 
-    private final RegistroRepository registroRepository;
-    private final UsuarioClient usuarioClient;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private UsuarioClient usuarioClient;
 
-    public RegistroService(
-        RegistroRepository registroRepository,
-        UsuarioClient usuarioClient,
-        PasswordEncoder passwordEncoder
-    ) {
-        this.registroRepository = registroRepository;
-        this.usuarioClient = usuarioClient;
-        this.passwordEncoder = passwordEncoder;
-    }
+    public UsuarioDTO registrarUsuario(UsuarioDTO usuarioDTO) {
 
-    @Transactional
-    public RegistroModel registrarUsuario(RegistroModel registro) {
-        
-        String passwordEncriptada = passwordEncoder.encode(registro.getPassword());
-        registro.setPassword(passwordEncriptada);
+        Boolean exito = usuarioClient.sincronizarUsuario(usuarioDTO).block();
 
-        
-        RegistroModel registroGuardado = registroRepository.save(registro);
-
-        UsuarioDTO usuarioDTO = new UsuarioDTO(
-            registroGuardado.getNombreUsuario(),
-            passwordEncriptada,
-            registroGuardado.getCorreo()
-        );
-
-        boolean exito = usuarioClient.sincronizarUsuario(usuarioDTO).block();
-
-        if (!exito) {
-            throw new RuntimeException("Error al sincronizar con el servicio de usuarios");
+        if (Boolean.TRUE.equals(exito)) {
+            return usuarioDTO;
+        } else {
+            throw new RuntimeException("No se pudo registrar el usuario en el microservicio de Usuarios.");
         }
-
-        return registroGuardado;
-    }
-
-    public RegistroModel buscarRegistro(Long id) {
-        return registroRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
-    }
-
-    public RegistroModel buscarPorNickname(String nickname) {
-        return registroRepository.findByNombreUsuario(nickname)
-            .orElseThrow(() -> new RuntimeException("Usuario con nickname " + nickname + " no encontrado"));
     }
 }
-

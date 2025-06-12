@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class UsuarioClient {
+
     private final WebClient webClient;
 
     public UsuarioClient(@Value("${usuarios-service.url}") String usuariosServiceUrl) {
@@ -26,18 +27,17 @@ public class UsuarioClient {
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(usuarioDTO)
             .retrieve()
-            .onStatus(HttpStatusCode::isError, response -> {
-                return response.bodyToMono(String.class)
-                    .flatMap(error -> Mono.error(new RuntimeException(
-                        "Error en USER-SERVICE: " + response.statusCode() + " - " + error
-                    )));
-            })
+            .onStatus(HttpStatusCode::isError, response -> 
+                response.bodyToMono(String.class)
+                    .flatMap(errorBody -> Mono.error(new RuntimeException(
+                        "Error en el microservicio de Usuarios: " + response.statusCode() + " - " + errorBody
+                    )))
+            )
             .bodyToMono(Void.class)
             .thenReturn(true)
             .onErrorResume(e -> {
-                System.err.println("Error al sincronizar usuario: " + e.getMessage());
+                System.err.println("Fallo al sincronizar usuario desde Registro: " + e.getMessage());
                 return Mono.just(false);
             });
     }
 }
-
