@@ -1,5 +1,9 @@
 package com.example.USER.config;
 
+import com.example.USER.model.Usuarios;
+import com.example.USER.repository.UsuarioRepository;
+import com.example.USER.service.UserService;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,19 +12,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.example.USER.model.Usuarios;
-import com.example.USER.repository.UsuarioRepository;
-
 @Configuration
 public class CargarDatos {
 
-    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -31,20 +30,18 @@ public class CargarDatos {
         return http.build();
     }
 
-    
     @Bean
-    CommandLineRunner initDataBase(UsuarioRepository usuariosRepository, PasswordEncoder passwordEncoder) {
+    CommandLineRunner initDataBase(UserService userService, PasswordEncoder encoder, UsuarioRepository usuarioRepository) {
         return args -> {
-            if (usuariosRepository.count() == 0) {
-                usuariosRepository.save(new Usuarios(null, 1L,  "gabriel", passwordEncoder.encode("password123"), "gabriel@duocuc.cl", null));
-                usuariosRepository.save(new Usuarios(null, 2L, "francisco", passwordEncoder.encode("1234secure"), "fran@gmail.com", null));
-                usuariosRepository.save(new Usuarios(null, 3L, "mauricio", passwordEncoder.encode("miClaveSegura"), "maur@gmail.com", null));
-                usuariosRepository.save(new Usuarios(null, 4L, "riskoder", passwordEncoder.encode("clave123"), "risk@gmail.com", null));
-                usuariosRepository.save(new Usuarios(null, 5L,  "Anonimus", passwordEncoder.encode("pass5678"), "pedroramirez@example.com", null));
+            if (usuarioRepository.count() == 0) {
+                userService.guardarUsuario(new Usuarios(null, 1L, "gabriel", "gabriel@duocuc.cl", encoder.encode("password123"), null, null, null));
+                userService.guardarUsuario(new Usuarios(null, 2L, "francisco", "fran@gmail.com", encoder.encode("1234secure"), null, null, null));
+                userService.guardarUsuario(new Usuarios(null, 3L, "mauricio", "maur@gmail.com", encoder.encode("miClaveSegura"), null, null, null));
+                userService.guardarUsuario(new Usuarios(null, 4L, "riskoder", "risk@gmail.com", encoder.encode("clave123"), null, null, null));
+                userService.guardarUsuario(new Usuarios(null, 5L, "Anonimus", "pedroramirez@example.com", encoder.encode("pass5678"), null, null, null));
 
-                System.out.println("✅ Datos de usuarios cargados correctamente con contraseñas encriptadas.");
+                System.out.println("✅ Usuarios iniciales insertados correctamente con contraseñas encriptadas.");
             }
         };
     }
 }
-

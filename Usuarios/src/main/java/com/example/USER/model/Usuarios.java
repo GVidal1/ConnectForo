@@ -31,23 +31,29 @@ public class Usuarios {
     @Column(name = "nombre_usuario", nullable = false, unique = true, length = 100)
     private String nombreUsuario;
 
+    @NotBlank(message = "El correo no puede estar vacío.")
+    @Email(message = "El correo debe tener un formato válido.")
+    @Column(name = "correo", nullable = false, unique = true)
+    private String correo;
+
     @NotBlank(message = "La contraseña no puede estar vacía.")
     @Size(min = 3, max = 100, message = "La contraseña debe contener entre 3 y 100 caracteres (encriptada).")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false, length = 100)
     private String password;
 
-    @NotBlank(message = "El correo no puede estar vacío.")
-    @Email(message = "El correo debe tener un formato válido.")
-    @Column(name = "correo", nullable = false, unique = true)
-    private String correo;
-
     @Column(name = "fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion;
+
+    private String nombre;
+
+    private String apellidos;
 
     @PrePersist
     protected void inicializacionDatos() {
         this.fechaCreacion = LocalDateTime.now();
+        this.nombre = null;
+        this.apellidos = null;
     }
 }
 
