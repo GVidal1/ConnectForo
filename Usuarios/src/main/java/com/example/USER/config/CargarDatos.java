@@ -7,10 +7,8 @@ import com.example.USER.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class CargarDatos {
@@ -18,16 +16,6 @@ public class CargarDatos {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
-            );
-        return http.build();
     }
 
     @Bean
@@ -40,7 +28,7 @@ public class CargarDatos {
                 userService.guardarUsuario(new Usuarios(null, 4L, "riskoder", "risk@gmail.com", encoder.encode("clave123"), null, null, null));
                 userService.guardarUsuario(new Usuarios(null, 5L, "Anonimus", "pedroramirez@example.com", encoder.encode("pass5678"), null, null, null));
 
-                System.out.println("✅ Usuarios iniciales insertados correctamente con contraseñas encriptadas.");
+                System.out.println("Usuarios iniciales insertados correctamente con contraseñas encriptadas.");
             }
         };
     }

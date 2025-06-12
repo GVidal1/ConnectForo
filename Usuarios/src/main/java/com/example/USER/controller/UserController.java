@@ -3,8 +3,10 @@ package com.example.USER.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.USER.dto.LoginDTO;
+import com.example.USER.dto.UsuarioDTO;
 import com.example.USER.model.Usuarios;
 import com.example.USER.service.UserService;
 
@@ -25,6 +29,9 @@ public class UserController {
     
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping()
     public ResponseEntity<List<Usuarios>> listaDeUsuarios() {
@@ -47,13 +54,36 @@ public class UserController {
         }
     }
 
-    @PostMapping()
-    public ResponseEntity<?> crearUsuario(@RequestBody @Valid Usuarios usuarioNuevo) {
+    @PostMapping
+    public ResponseEntity<?> crearUsuarioDesdeDTO(@RequestBody @Valid UsuarioDTO usuarioDTO) {
         try {
-            Usuarios usuarioGuardado = userService.guardarUsuario(usuarioNuevo);
+            Usuarios usuario = new Usuarios();
+            usuario.setIdRol(usuarioDTO.getIdRol());
+            usuario.setNombreUsuario(usuarioDTO.getNombreUsuario());
+            usuario.setCorreo(usuarioDTO.getCorreo());
+            usuario.setPassword(usuarioDTO.getPassword());
+
+            Usuarios usuarioGuardado = userService.guardarUsuario(usuario);
             return ResponseEntity.status(HttpStatus.CREATED).body(usuarioGuardado);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest().body("El correo ya está en uso.");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body("Error al crear el usuario: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUsuario(@Valid @RequestBody LoginDTO loginDTO) {
+        try {
+            Usuarios usuario = userService.obtenerUsuarioPorCorreo(loginDTO.getCorreo());
+
+            if (passwordEncoder.matches(loginDTO.getPassword(), usuario.getPassword())) {
+                return ResponseEntity.ok("Login exitoso");  
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no encontrado");
         }
     }
 
