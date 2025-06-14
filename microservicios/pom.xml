@@ -19,10 +19,10 @@
         <module>microservicio-foros</module>
         <module>microservicio-post</module>
         <module>microservicio-comentarios</module>
-        <module>ingresar</module>
-        <module>microservicio-rol</module>
-        <module>Registro</module>
-        <module>USER</module>
+        <module>microservicio-login</module>
+        <module>microservicio-roles</module>
+        <module>microservicio-registro</module>
+        <module>microservicio-usuarios</module>
     </modules>
 
     <groupId>com.microservicios.connectforo</groupId>
