@@ -44,10 +44,8 @@ public class RolController {
     @GetMapping("/{idRol}/usuarios")
     public ResponseEntity<?> obtenerUsuariosPorRol(@PathVariable Long idRol) {
         try {
-            // Primero verificamos que el rol existe
             rolService.obtenerRolPorId(idRol);
             
-            // Luego obtenemos los usuarios con ese rol
             List<UsuarioDTO> usuarios = usuarioClient.obtenerUsuariosPorRol(idRol);
             
             if (usuarios == null || usuarios.isEmpty()) {
