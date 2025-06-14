@@ -2,9 +2,11 @@ package com.microservicio.categorias.microservicio_categorias.controller;
 
 import com.microservicio.categorias.microservicio_categorias.model.Categorias;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/categorias")
@@ -35,7 +37,6 @@ public class CategoriasController {
         if (categoriasDisponibles.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-
         return ResponseEntity.ok(categoriasDisponibles);
     }
 
@@ -53,11 +54,11 @@ public class CategoriasController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarCategoria(
-        @PathVariable Long id,
-        @RequestBody @Valid Categorias categoria) {
+            @PathVariable Long id,
+            @RequestBody @Valid Categorias categoria) {
         try {
             Categorias categoriaActualizada = categoriasService.actualizarCategorias(id, categoria);
             return ResponseEntity.ok(categoriaActualizada);
@@ -73,8 +74,46 @@ public class CategoriasController {
             String resultado = categoriasService.borrarCategoria(id);
             return ResponseEntity.ok(resultado);
         } catch (RuntimeException e) {
-            // return ResponseEntity.notFound().build();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+    // http://localhost:8084/api/categorias/buscar/titulo?titulo=Frontend
+    @GetMapping("/buscar/titulo")
+    public ResponseEntity<List<Categorias>> buscarPorTitulo(@RequestParam String titulo) {
+        List<Categorias> categorias = categoriasService.buscarPorTitulo(titulo);
+        if (categorias.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(categorias);
+    }
+    // http://localhost:8084/api/categorias/buscar/descripcion?descripcion=Desarrollo
+    @GetMapping("/buscar/descripcion")
+    public ResponseEntity<List<Categorias>> buscarPorDescripcion(@RequestParam String descripcion) {
+        List<Categorias> categorias = categoriasService.buscarPorDescripcion(descripcion);
+        if (categorias.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(categorias);
+    }
+    // http://localhost:8084/api/categorias/buscar/longitud-titulo?longitud=5
+    @GetMapping("/buscar/longitud-titulo")
+    public ResponseEntity<List<Categorias>> buscarPorLongitudTitulo(@RequestParam int longitud) {
+        List<Categorias> categorias = categoriasService.buscarPorLongitudTitulo(longitud);
+        if (categorias.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(categorias);
+    }
+
+    // http://localhost:8084/api/categorias/buscar/por-fecha?fechaInicio=2024-01-01T00:00:00&fechaFin=2025-12-31T23:59:59
+    @GetMapping("/buscar/por-fecha")
+    public ResponseEntity<List<Categorias>> buscarPorRangoFechas(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin) {
+        List<Categorias> categorias = categoriasService.buscarPorRangoFechas(fechaInicio, fechaFin);
+        if (categorias.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(categorias);
     }
 }
