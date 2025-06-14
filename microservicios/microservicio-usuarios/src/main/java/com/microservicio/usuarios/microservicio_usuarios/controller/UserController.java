@@ -54,6 +54,19 @@ public class UserController {
         }
     }
 
+    @GetMapping("/rol/{idRol}")
+    public ResponseEntity<?> buscarUsuariosPorRol(@PathVariable Long idRol) {
+        try {
+            List<Usuarios> usuarios = userService.obtenerUsuariosPorRol(idRol);
+            if (usuarios.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(usuarios);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> crearUsuarioDesdeDTO(@RequestBody @Valid UsuarioDTO usuarioDTO) {
         try {

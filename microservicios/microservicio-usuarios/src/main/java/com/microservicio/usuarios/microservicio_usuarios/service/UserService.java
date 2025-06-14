@@ -37,6 +37,14 @@ public class UserService {
             .orElseThrow(() -> new RuntimeException("No se ha encontrado un usuario con ese correo."));
     }
 
+    public List<Usuarios> obtenerUsuariosPorRol(Long idRol) {
+        Map<String, Object> verificarRol = rolClient.obtenerRolPorId(idRol);
+        if (verificarRol == null || verificarRol.isEmpty()) {
+            throw new RuntimeException("El rol con ID " + idRol + " no existe.");
+        }
+        return usuarioRepository.findByIdRol(idRol);
+    }
+
     public String borrarUsuario(Long id) {
         Usuarios usuarioAct = obtenerUsuarioPorId(id);
         usuarioRepository.deleteById(usuarioAct.getId());
