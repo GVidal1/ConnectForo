@@ -2,6 +2,7 @@ package com.microservicio.post.microservicio_post.services;
 
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -94,4 +95,60 @@ public class PostService {
 
   }
 
+  public List<Post> buscarPorPalabraEnTitulo(String palabra) {
+    return postRepository.findByTituloContainingIgnoreCase(palabra);
+  }
+
+  public List<Post> buscarPorPalabraEnContenido(String palabra) {
+    return postRepository.findByContenidoContainingIgnoreCase(palabra);
+  }
+
+  public List<Post> buscarPorUsuario(Long idUsuario) {
+    Map<String, Object> usuario = usuarioClient.obtenerUsuarioPorId(idUsuario);
+    if (usuario == null || usuario.isEmpty()) {
+      throw new RuntimeException("El usuario no existe");
+    }
+    return postRepository.findByIdUsuario(idUsuario);
+  }
+
+  public List<Post> buscarPorForo(Long idForo) {
+    Map<String, Object> foro = foroClient.obtenerForoPorId(idForo);
+    if (foro == null || foro.isEmpty()) {
+      throw new RuntimeException("El foro no existe");
+    }
+    return postRepository.findByIdForo(idForo);
+  }
+
+  public List<Post> buscarPorRangoFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+    if (fechaInicio.isAfter(fechaFin)) {
+      throw new RuntimeException("La fecha de inicio debe ser anterior a la fecha fin");
+    }
+    return postRepository.findByFechaCreacionBetween(fechaInicio, fechaFin);
+  }
+
+  public List<Post> buscarCreadosDespuesDe(LocalDateTime fecha) {
+    return postRepository.findByFechaCreacionAfter(fecha);
+  }
+
+  public List<Post> buscarCreadosAntesDe(LocalDateTime fecha) {
+    return postRepository.findByFechaCreacionBefore(fecha);
+  }
+
+  public List<Post> buscarPorLongitudTitulo(int longitud) {
+    return postRepository.findByLongitudTituloMayorA(longitud);
+  }
+
+  public List<Post> buscarPorUsuarioYForo(Long idUsuario, Long idForo) {
+    Map<String, Object> usuario = usuarioClient.obtenerUsuarioPorId(idUsuario);
+    Map<String, Object> foro = foroClient.obtenerForoPorId(idForo);
+    
+    if (usuario == null || usuario.isEmpty()) {
+      throw new RuntimeException("El usuario no existe");
+    }
+    if (foro == null || foro.isEmpty()) {
+      throw new RuntimeException("El foro no existe");
+    }
+    
+    return postRepository.findByIdUsuarioAndIdForo(idUsuario, idForo);
+  }
 }

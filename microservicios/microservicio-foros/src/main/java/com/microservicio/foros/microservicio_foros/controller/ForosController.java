@@ -79,7 +79,7 @@ public class ForosController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
+    // /api/foros/usuario/{idUsuario}
     @GetMapping("/usuario/{idUsuario}")
     public ResponseEntity<?> buscarForosPorUsuario(@PathVariable Long idUsuario) {
         try {
