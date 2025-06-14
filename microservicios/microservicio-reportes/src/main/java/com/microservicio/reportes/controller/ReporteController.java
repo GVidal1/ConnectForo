@@ -22,7 +22,11 @@ public class ReporteController {
 
     @GetMapping
     public ResponseEntity<List<Reporte>> getAllReportes() {
-        return ResponseEntity.ok(reporteService.findAll());
+        List<Reporte> reportes = reporteService.findAll();
+        if (reportes.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reportes);
     }
 
     @GetMapping("/{id}")
@@ -33,7 +37,7 @@ public class ReporteController {
     @PostMapping
     public ResponseEntity<Reporte> createReporte(@Valid @RequestBody Reporte reporte) {
         Reporte savedReporte = reporteService.save(reporte);
-        return new ResponseEntity<>(savedReporte, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedReporte);
     }
 
     @PutMapping("/{id}")
@@ -45,41 +49,60 @@ public class ReporteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReporte(@PathVariable Long id) {
         reporteService.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/estado/{estado}")
     public ResponseEntity<List<Reporte>> getReportesByEstado(@PathVariable String estado) {
-        return ResponseEntity.ok(reporteService.findByEstado(estado));
+        List<Reporte> reportes = reporteService.findByEstado(estado);
+        if (reportes.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reportes);
     }
 
     @GetMapping("/usuario-reportante/{id}")
     public ResponseEntity<List<Reporte>> getReportesByUsuarioReportante(@PathVariable Long id) {
-        return ResponseEntity.ok(reporteService.findByIdUsuarioReportante(id));
+        List<Reporte> reportes = reporteService.findByIdUsuarioReportante(id);
+        if (reportes.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reportes);
     }
 
     @GetMapping("/usuario-reportado/{id}")
     public ResponseEntity<List<Reporte>> getReportesByUsuarioReportado(@PathVariable Long id) {
-        return ResponseEntity.ok(reporteService.findByIdUsuarioReportado(id));
+        List<Reporte> reportes = reporteService.findByIdUsuarioReportado(id);
+        if (reportes.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reportes);
     }
 
     @GetMapping("/foro/{id}")
     public ResponseEntity<List<Reporte>> getReportesByForo(@PathVariable Long id) {
-        return ResponseEntity.ok(reporteService.findByIdForo(id));
+        List<Reporte> reportes = reporteService.findByIdForo(id);
+        if (reportes.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reportes);
     }
 
     @GetMapping("/categoria/{id}")
     public ResponseEntity<List<Reporte>> getReportesByCategoria(@PathVariable Long id) {
-        return ResponseEntity.ok(reporteService.findByIdCategoria(id));
+        List<Reporte> reportes = reporteService.findByIdCategoria(id);
+        if (reportes.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reportes);
     }
 
     @GetMapping("/tipo/{tipo}")
     public ResponseEntity<List<Reporte>> getReportesByTipo(@PathVariable String tipo) {
-        return ResponseEntity.ok(reporteService.findByTipoReporte(tipo));
-    }
-
-    @PatchMapping("/{id}/estado")
-    public ResponseEntity<Reporte> updateEstado(@PathVariable Long id, @RequestParam String nuevoEstado) {
-        return ResponseEntity.ok(reporteService.updateEstado(id, nuevoEstado));
+        List<Reporte> reportes = reporteService.findByTipoReporte(tipo);
+        if (reportes.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reportes);
     }
 } 
