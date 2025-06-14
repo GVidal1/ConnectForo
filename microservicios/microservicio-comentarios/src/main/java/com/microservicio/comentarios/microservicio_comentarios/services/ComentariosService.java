@@ -2,6 +2,7 @@ package com.microservicio.comentarios.microservicio_comentarios.services;
 
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,4 +70,73 @@ public class ComentariosService {
 
   }
 
+  // Nuevos métodos de búsqueda
+  public List<Comentarios> buscarPorPalabraEnContenido(String palabra) {
+    return comentariosRepository.findByContenidoContainingIgnoreCase(palabra);
+  }
+
+  public List<Comentarios> buscarPorUsuario(Long idUsuario) {
+    Map<String, Object> usuario = usuarioClient.obtenerUsuarioPorId(idUsuario);
+    if (usuario == null || usuario.isEmpty()) {
+      throw new RuntimeException("El usuario no existe");
+    }
+    return comentariosRepository.findByIdUsuario(idUsuario);
+  }
+
+  public List<Comentarios> buscarPorPost(Long idPost) {
+    Map<String, Object> post = postClient.obtenerPostPorId(idPost);
+    if (post == null || post.isEmpty()) {
+      throw new RuntimeException("El post no existe");
+    }
+    return comentariosRepository.findByIdPost(idPost);
+  }
+
+  public List<Comentarios> buscarPorRangoFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+    if (fechaInicio.isAfter(fechaFin)) {
+      throw new RuntimeException("La fecha de inicio debe ser anterior a la fecha fin");
+    }
+    return comentariosRepository.findByFechaCreacionBetween(fechaInicio, fechaFin);
+  }
+
+  public List<Comentarios> buscarCreadosDespuesDe(LocalDateTime fecha) {
+    return comentariosRepository.findByFechaCreacionAfter(fecha);
+  }
+
+  public List<Comentarios> buscarCreadosAntesDe(LocalDateTime fecha) {
+    return comentariosRepository.findByFechaCreacionBefore(fecha);
+  }
+
+  public List<Comentarios> buscarPorLongitudContenido(int longitud) {
+    return comentariosRepository.findByLongitudContenidoMayorA(longitud);
+  }
+
+  public List<Comentarios> buscarPorUsuarioYPost(Long idUsuario, Long idPost) {
+    Map<String, Object> usuario = usuarioClient.obtenerUsuarioPorId(idUsuario);
+    Map<String, Object> post = postClient.obtenerPostPorId(idPost);
+    
+    if (usuario == null || usuario.isEmpty()) {
+      throw new RuntimeException("El usuario no existe");
+    }
+    if (post == null || post.isEmpty()) {
+      throw new RuntimeException("El post no existe");
+    }
+    
+    return comentariosRepository.findByIdUsuarioAndIdPost(idUsuario, idPost);
+  }
+
+  public Long contarComentariosPorPost(Long idPost) {
+    Map<String, Object> post = postClient.obtenerPostPorId(idPost);
+    if (post == null || post.isEmpty()) {
+      throw new RuntimeException("El post no existe");
+    }
+    return comentariosRepository.countByIdPost(idPost);
+  }
+
+  public Long contarComentariosPorUsuario(Long idUsuario) {
+    Map<String, Object> usuario = usuarioClient.obtenerUsuarioPorId(idUsuario);
+    if (usuario == null || usuario.isEmpty()) {
+      throw new RuntimeException("El usuario no existe");
+    }
+    return comentariosRepository.countByIdUsuario(idUsuario);
+  }
 }
