@@ -17,11 +17,11 @@ public class CargarDatos {
             // Solo se ejecuta si no hay foros en la base de datos
             if (forosRepository.count() == 0) {
                 // Insertamos los foros con los datos proporcionados
-                forosRepository.save(new Foros(null, 1L, "React Hooks", "Todo sobre los Hooks de React", null));
-                forosRepository.save(new Foros(null, 2L, "GraphQL", "Alternativa a REST APIs", null));
-                forosRepository.save(new Foros(null, 3L, "Flutter", "Desarrollo multiplataforma", null));
-                forosRepository.save(new Foros(null, 4L, "JUnit 5", "Testing en Java", null));
-                forosRepository.save(new Foros(null, 5L, "Figma Tips", "Diseño de interfaces colaborativo", null));
+                forosRepository.save(new Foros(null, 1L, 1L, "React Hooks", "Todo sobre los Hooks de React", null));
+                forosRepository.save(new Foros(null, 2L, 1L, "GraphQL", "Alternativa a REST APIs", null));
+                forosRepository.save(new Foros(null, 3L, 2L, "Flutter", "Desarrollo multiplataforma", null));
+                forosRepository.save(new Foros(null, 4L, 2L, "JUnit 5", "Testing en Java", null));
+                forosRepository.save(new Foros(null, 5L, 3L, "Figma Tips", "Diseño de interfaces colaborativo", null));
 
                 System.out.println("Datos de foros cargados correctamente.");
             }

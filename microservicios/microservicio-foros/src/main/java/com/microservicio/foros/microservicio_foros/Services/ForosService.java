@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.microservicio.foros.microservicio_foros.Model.Foros;
 import com.microservicio.foros.microservicio_foros.Repository.ForosRepository;
 import com.microservicio.foros.microservicio_foros.client.CategoriaClient;
+import com.microservicio.foros.microservicio_foros.client.UsuarioClient;
 
 @Service
 public class ForosService {
@@ -19,6 +20,9 @@ public class ForosService {
   @Autowired
   private CategoriaClient categoriaClient;
 
+  @Autowired
+  private UsuarioClient usuarioClient;
+
   public List<Foros> listarForos() {
     return forosRepository.findAll();
   }
@@ -28,15 +32,19 @@ public class ForosService {
   }
 
   public Foros guardarForo(Foros foro) {
-    
+    // Validar que la categoría exista
     Map<String, Object> categorias = categoriaClient.obtenerCategoriaPorId(foro.getIdCategoria());
-
     if (categorias == null || categorias.isEmpty()) {
       throw new RuntimeException("El id de la categoria no se ha encontrado. No se puede realizar el foro.");
     }
 
+    // Validar que el usuario exista
+    Map<String, Object> usuario = usuarioClient.obtenerUsuarioPorId(foro.getIdUsuarioCreador());
+    if (usuario == null || usuario.isEmpty()) {
+      throw new RuntimeException("El id del usuario creador no se ha encontrado. No se puede realizar el foro.");
+    }
+
     return forosRepository.save(foro);
-    
   }
 
   public String borrarForo(Long id) { 
@@ -49,25 +57,35 @@ public class ForosService {
     Foros foroActual = buscarForos(id);
 
     if (foroActualizado.getIdCategoria() != null) {
-        Map<String, Object> categorias = categoriaClient.obtenerCategoriaPorId(foroActualizado.getIdCategoria());
-        
-        if (categorias == null || categorias.isEmpty()) {
-            throw new RuntimeException("El id de la categoria no se ha encontrado. No se puede actualizar el foro.");
-        }
+      Map<String, Object> categorias = categoriaClient.obtenerCategoriaPorId(foroActualizado.getIdCategoria());
+      if (categorias == null || categorias.isEmpty()) {
+        throw new RuntimeException("El id de la categoria no se ha encontrado. No se puede actualizar el foro.");
+      }
+    }
+
+    if (foroActualizado.getIdUsuarioCreador() != null) {
+      Map<String, Object> usuario = usuarioClient.obtenerUsuarioPorId(foroActualizado.getIdUsuarioCreador());
+      if (usuario == null || usuario.isEmpty()) {
+        throw new RuntimeException("El id del usuario creador no se ha encontrado. No se puede actualizar el foro.");
+      }
     }
 
     if (foroActualizado.getTitulo() != null) {
-        foroActual.setTitulo(foroActualizado.getTitulo());
+      foroActual.setTitulo(foroActualizado.getTitulo());
     }
 
     if (foroActualizado.getContenido() != null) {
-        foroActual.setContenido(foroActualizado.getContenido());
+      foroActual.setContenido(foroActualizado.getContenido());
     }
 
     if (foroActualizado.getIdCategoria() != null) {
-        foroActual.setIdCategoria(foroActualizado.getIdCategoria());
+      foroActual.setIdCategoria(foroActualizado.getIdCategoria());
+    }
+
+    if (foroActualizado.getIdUsuarioCreador() != null) {
+      foroActual.setIdUsuarioCreador(foroActualizado.getIdUsuarioCreador());
     }
 
     return forosRepository.save(foroActual);
-}
+  }
 }
