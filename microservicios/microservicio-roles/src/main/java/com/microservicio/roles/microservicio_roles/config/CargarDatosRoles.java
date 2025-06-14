@@ -15,20 +15,20 @@ public class CargarDatosRoles {
     @Autowired
     private RolService rolService;
 
+    @Autowired
     private RolRepository rolRepository;
 
     @Bean
     CommandLineRunner initDatabase() {
         return args -> {
             if (rolRepository.count() == 0) {
-                
                 rolService.guardarRol(new Rol(null,"ADMIN"));
                 rolService.guardarRol(new Rol(null,"MODERADOR"));
                 rolService.guardarRol(new Rol(null,"SOPORTE"));
                 rolService.guardarRol(new Rol(null,"GESTOR_ANUNCIOS"));
                 rolService.guardarRol(new Rol(null,"USUARIO"));
                 
-                System.out.println("Datos de roles cargados .");
+                System.out.println("Datos de roles cargados correctamente.");
             }
         };
     }
