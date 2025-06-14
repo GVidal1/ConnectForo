@@ -1,5 +1,6 @@
 package com.microservicio.foros.microservicio_foros.Services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -87,5 +88,51 @@ public class ForosService {
     }
 
     return forosRepository.save(foroActual);
+  }
+
+  public List<Foros> buscarForosPorUsuario(Long idUsuario) {
+    Map<String, Object> usuario = usuarioClient.obtenerUsuarioPorId(idUsuario);
+    if (usuario == null || usuario.isEmpty()) {
+      throw new RuntimeException("El usuario no existe");
+    }
+    return forosRepository.encontrarForosPorIdUsuario(idUsuario);
+  }
+
+  public List<Foros> buscarForosPorPalabraEnTitulo(String palabra) {
+    return forosRepository.encontrarForosPorPalabraEnTitulo(palabra);
+  }
+
+  public List<Foros> buscarForosPorPalabraEnContenido(String palabra) {
+    return forosRepository.encontrarForosPorPalabraEnContenido(palabra);
+  }
+
+  public List<Foros> buscarForosPorRangoFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+    return forosRepository.encontrarForosPorRangoFechas(fechaInicio, fechaFin);
+  }
+
+  public List<Foros> buscarForosPorCategoriaYUsuario(Long idCategoria, Long idUsuario) {
+    Map<String, Object> categoria = categoriaClient.obtenerCategoriaPorId(idCategoria);
+    if (categoria == null || categoria.isEmpty()) {
+      throw new RuntimeException("La categoría no existe");
+    }
+
+    Map<String, Object> usuario = usuarioClient.obtenerUsuarioPorId(idUsuario);
+    if (usuario == null || usuario.isEmpty()) {
+      throw new RuntimeException("El usuario no existe");
+    }
+
+    return forosRepository.encontrarForosPorCategoriaYUsuario(idCategoria, idUsuario);
+  }
+
+  public List<Foros> buscarForosPorLongitudTitulo(int longitud) {
+    return forosRepository.encontrarForosPorLongitudTitulo(longitud);
+  }
+
+  public List<Foros> buscarForosCreadosDespuesDe(LocalDateTime fecha) {
+    return forosRepository.encontrarForosCreadosDespuesDe(fecha);
+  }
+
+  public List<Foros> buscarForosCreadosAntesDe(LocalDateTime fecha) {
+    return forosRepository.encontrarForosCreadosAntesDe(fecha);
   }
 }
