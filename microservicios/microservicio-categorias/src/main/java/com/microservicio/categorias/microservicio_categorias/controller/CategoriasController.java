@@ -68,13 +68,13 @@ public class CategoriasController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarCategoria(@PathVariable Long id) {
+    public ResponseEntity<?> eliminarCategoria(@PathVariable Long id) {
         try {
             Categorias categoria = categoriasService.buscarCategoria(id);
-            String resultado = categoriasService.borrarCategoria(id);
-            return ResponseEntity.ok(resultado);
+            categoriasService.borrarCategoria(id);
+            return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
     // http://localhost:8084/api/categorias/buscar/titulo?titulo=Frontend
