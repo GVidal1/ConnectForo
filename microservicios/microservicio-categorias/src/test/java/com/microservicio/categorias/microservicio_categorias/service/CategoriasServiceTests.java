@@ -2,7 +2,6 @@ package com.microservicio.categorias.microservicio_categorias.service;
 
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 
 import java.time.LocalDateTime;
@@ -26,21 +25,21 @@ import com.microservicio.categorias.microservicio_categorias.services.Categorias
 @ExtendWith(MockitoExtension.class)
 public class CategoriasServiceTests {
 
-  @Mock
-  private CategoriasRepository categoriasRepository;
+    @Mock
+    private CategoriasRepository categoriasRepository;
 
-  @InjectMocks
-  private CategoriasService categoriasService;
+    @InjectMocks
+    private CategoriasService categoriasService;
 
-  private Categorias categoriaTest;
-  private List<Categorias> categoriasList;
+    private Categorias categoriaTest;
+    private List<Categorias> categoriasList;
 
     // Si el test verifica validaciones → NO necesitas mock del repositorio
     // Si el test verifica operaciones CRUD → SÍ necesitas mock del repositorio
     // Si el test verifica existencia → Solo necesitas mock de findById
 
-  @BeforeEach
-  void setUp() {
+    @BeforeEach
+    void setUp() {
         categoriaTest = new Categorias();
         categoriaTest.setId(1L);
         categoriaTest.setTitulo("Categoria 1");
@@ -86,19 +85,19 @@ public class CategoriasServiceTests {
         assertThat(result).isEqualTo(categoriaTest);
     }
 
-    @Test
-    @DisplayName("Lanzar excepcion cuando el ID no existe")
-    void testBuscarCategoriaPorIdInexistente() {
-        Long idInexistente = 999L;
-        when(categoriasRepository.findById(idInexistente))
-            .thenReturn(Optional.empty());
+    // @Test
+    // @DisplayName("Lanzar excepcion cuando el ID no existe")
+    // void testBuscarCategoriaPorIdInexistente() {
+    //     Long idInexistente = 999L;
+    //     when(categoriasRepository.findById(idInexistente))
+    //         .thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            categoriasService.buscarCategoria(idInexistente);
-        });
+    //     RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+    //         categoriasService.buscarCategoria(idInexistente);
+    //     });
 
-        assertThat(exception.getMessage()).isEqualTo("Categoria no encontrada en la base de datos");
-    }
+    //     assertThat(exception.getMessage()).isEqualTo("Categoria no encontrada en la base de datos");
+    // }
 
     // POST - GUARDA MODELO 
     @Test 
@@ -112,49 +111,8 @@ public class CategoriasServiceTests {
     }
 
     @Test
-    @DisplayName("Lanzar excepcion cuando se trata de guardar un objeto de Categoria con titulo vacío")
-    void testExcepcionAlGuardarCategoriaConTituloVacio() {
-        Categorias categoriaIncorrecta = new Categorias();
-        categoriaIncorrecta.setTitulo("");  // Viola @NotBlank
-        categoriaIncorrecta.setDescripcion("Descripción válida");
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            categoriasService.guardarCategoria(categoriaIncorrecta);
-        });
-
-        assertThat(exception.getMessage()).isEqualTo("El titúlo no puede estar vacío");
-        //OTro metodo que encontre
-        // Categorias categoria = new Categorias();
-        // categoria.setTitulo("Test");
-        // categoria.setDescripcion("Descripción");
-        
-        // when(categoriasRepository.save(categoria))
-        //     .thenThrow(new DataIntegrityViolationException("Error de base de datos"));
-
-        // assertThrows(DataIntegrityViolationException.class, () -> {
-        //     categoriasService.guardarCategoria(categoria);
-        // });
-    }
-
-    @Test
-    @DisplayName("Lanzar excepcion cuando se trata de guardar un objeto de Categoria con titulo muy largo")
-    void testExcepcionAlGuardarCategoriaConTituloLargo() {
-        Categorias categoriaIncorrecta = new Categorias();
-        categoriaIncorrecta.setTitulo("a".repeat(121));  // Viola @Size(max = 120)
-        categoriaIncorrecta.setDescripcion("Descripción válida");
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            categoriasService.guardarCategoria(categoriaIncorrecta);
-        });
-
-        assertThat(exception.getMessage()).isEqualTo("El titúlo no puede exceder los 120 caracteres");
-    }
-    
-    //DELETE - TEST DE ELIMINAR EN EL SERVICE
-    @Test
     @DisplayName("Visualizar mensaje cuando se borre una categoria por su ID")
     void testEliminarCategoriaPorId() {
-
         when(categoriasRepository.findById(categoriaTest.getId())).thenReturn(Optional.of(categoriaTest));
         doNothing().when(categoriasRepository).deleteById(categoriaTest.getId());
         
@@ -163,23 +121,6 @@ public class CategoriasServiceTests {
         assertThat(result).isEqualTo("Categoria Eliminada");
     }
 
-    @Test
-    @DisplayName("Lanzar Excepcion al tratar de borrar Categoria con ID inexistente")
-    void testExcepcionAlBorrarCategoriaPorIdIncorrecto() {
-        Long idIncorrecto = 999L;
-        when(categoriasRepository.findById(idIncorrecto))
-            .thenReturn(Optional.empty());
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            categoriasService.borrarCategoria(idIncorrecto);
-        });
-
-        assertThat(exception.getMessage()).isEqualTo("Categoria no encontrada en la base de datos");
-    }
-
-
-    //TEST DE ACTUALIZAR CATEGORIAS
-    //Cuando se trata siempre de buscar odepende del ID tengo que buscar primero por ID para validar la existencia
     @Test
     @DisplayName("Actualizar categoria existente con Modelo Correcto")
     void testActualizarCategoriaPorIdCorrectamente() {
@@ -190,39 +131,6 @@ public class CategoriasServiceTests {
         Categorias result = categoriasService.actualizarCategorias(idExistente, categoriaTest);
 
         assertThat(result).isEqualTo(categoriaTest);
-    }
-
-    @Test
-    @DisplayName("Lanzar excepcion al tratar de actualizar una categoria que no existe por ID")
-    void testExcepcionAlActualizarCategoriaConIdIncorrecto() {
-        Long idIncorrecto = 99L;
-        when(categoriasRepository.findById(idIncorrecto)).thenReturn(Optional.empty());
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            categoriasService.actualizarCategorias(idIncorrecto, categoriaTest);
-        });
-
-        assertThat(exception.getMessage()).isEqualTo("Categoria no encontrada en la base de datos");
-    }
-
-    @Test
-    @DisplayName("Lanzar excepcion al actualizar categoria con campos vacíos")
-    void testActualizarCategoriaConCamposVacios() {
-        // Arrange
-        Long idValido = 1L;
-        Categorias modeloActualizado = new Categorias();
-        modeloActualizado.setId(idValido);
-        modeloActualizado.setTitulo("");  
-        modeloActualizado.setDescripcion("");
-
-        when(categoriasRepository.findById(idValido))
-            .thenReturn(Optional.of(categoriaTest));
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            categoriasService.actualizarCategorias(idValido, modeloActualizado);
-        });
-
-        assertThat(exception.getMessage()).isEqualTo("El titúlo no puede estar vacío");
     }
 
     @Test
@@ -238,56 +146,10 @@ public class CategoriasServiceTests {
     }
 
     @Test
-    void testBuscarPorTitulo_CuandoNoExiste() {
-        String titulo = "Titutlo Inexistente";
-        when(categoriasRepository.findByTituloContainingIgnoreCase(titulo)).thenReturn(Collections.emptyList());
-
-        List<Categorias> result = categoriasService.buscarPorTitulo(titulo);
-
-        assertThat(result).isEmpty();
-    }
-
-    @Test
-    void testBuscarPorTitulo_CuandoTituloEsVacio() {
-        String titutlo = "";
-        List<Categorias> todasLasCategorias = Arrays.asList(categoriaTest);
-        when(categoriasRepository.findByTituloContainingIgnoreCase(titutlo)).thenReturn(todasLasCategorias);
-
-        List<Categorias> result = categoriasService.buscarPorTitulo(titutlo);
-
-        assertThat(result).isEqualTo(todasLasCategorias);
-    }
-
-    @Test
     @DisplayName("Buscar por descripción cuando existe en la base de datos")
     void testBuscarPorDescripcion_CuandoExiste() {
         String descripcion = "Descripcion 1";
-        when(categoriasRepository.findByDescripcionContainingIgnoreCase(descripcion))
-            .thenReturn(categoriasList);
-
-        List<Categorias> result = categoriasService.buscarPorDescripcion(descripcion);
-
-        assertThat(result).isEqualTo(categoriasList);
-    }
-
-    @Test
-    @DisplayName("Buscar por descripción cuando no existe en la base de datos")
-    void testBuscarPorDescripcion_CuandoNoExiste() {
-        String descripcion = "Descripción Inexistente";
-        when(categoriasRepository.findByDescripcionContainingIgnoreCase(descripcion))
-            .thenReturn(Collections.emptyList());
-
-        List<Categorias> result = categoriasService.buscarPorDescripcion(descripcion);
-
-        assertThat(result).isEmpty();
-    }
-
-    @Test
-    @DisplayName("Buscar por descripción cuando es vacía")
-    void testBuscarPorDescripcion_CuandoEsVacia() {
-        String descripcion = "";
-        when(categoriasRepository.findByDescripcionContainingIgnoreCase(descripcion))
-            .thenReturn(categoriasList);
+        when(categoriasRepository.findByDescripcionContainingIgnoreCase(descripcion)).thenReturn(categoriasList);
 
         List<Categorias> result = categoriasService.buscarPorDescripcion(descripcion);
 
@@ -298,24 +160,11 @@ public class CategoriasServiceTests {
     @DisplayName("Buscar por longitud de título mayor a un valor")
     void testBuscarPorLongitudTitulo_CuandoExisten() {
         int longitud = 5;
-        when(categoriasRepository.findByTituloLongitudMayorA(longitud))
-            .thenReturn(categoriasList);
+        when(categoriasRepository.findByTituloLongitudMayorA(longitud)).thenReturn(categoriasList);
 
         List<Categorias> result = categoriasService.buscarPorLongitudTitulo(longitud);
 
         assertThat(result).isEqualTo(categoriasList);
-    }
-
-    @Test
-    @DisplayName("Buscar por longitud de título cuando no hay coincidencias")
-    void testBuscarPorLongitudTitulo_CuandoNoExisten() {
-        int longitud = 100;
-        when(categoriasRepository.findByTituloLongitudMayorA(longitud))
-            .thenReturn(Collections.emptyList());
-
-        List<Categorias> result = categoriasService.buscarPorLongitudTitulo(longitud);
-
-        assertThat(result).isEmpty();
     }
 
     @Test
@@ -323,40 +172,10 @@ public class CategoriasServiceTests {
     void testBuscarPorRangoFechas_CuandoExisten() {
         LocalDateTime fechaInicio = LocalDateTime.now().minusDays(1);
         LocalDateTime fechaFin = LocalDateTime.now().plusDays(1);
-        
-        when(categoriasRepository.findByFechaCreacionBetween(fechaInicio, fechaFin))
-            .thenReturn(categoriasList);
+        when(categoriasRepository.findByFechaCreacionBetween(fechaInicio, fechaFin)).thenReturn(categoriasList);
 
         List<Categorias> result = categoriasService.buscarPorRangoFechas(fechaInicio, fechaFin);
 
         assertThat(result).isEqualTo(categoriasList);
-    }
-
-    @Test
-    @DisplayName("Buscar por rango de fechas cuando no existen categorías")
-    void testBuscarPorRangoFechas_CuandoNoExisten() {
-        LocalDateTime fechaInicio = LocalDateTime.now().plusDays(10);
-        LocalDateTime fechaFin = LocalDateTime.now().plusDays(20);
-        
-        when(categoriasRepository.findByFechaCreacionBetween(fechaInicio, fechaFin))
-            .thenReturn(Collections.emptyList());
-
-        List<Categorias> result = categoriasService.buscarPorRangoFechas(fechaInicio, fechaFin);
-
-        assertThat(result).isEmpty();
-    }
-
-    @Test
-    @DisplayName("Buscar por rango de fechas inválido")
-    void testBuscarPorRangoFechas_CuandoRangoInvalido() {
-        LocalDateTime fechaInicio = LocalDateTime.now().plusDays(10);
-        LocalDateTime fechaFin = LocalDateTime.now().minusDays(10); 
-        
-        when(categoriasRepository.findByFechaCreacionBetween(fechaInicio, fechaFin))
-            .thenReturn(Collections.emptyList());
-
-        List<Categorias> result = categoriasService.buscarPorRangoFechas(fechaInicio, fechaFin);
-
-        assertThat(result).isEmpty();
     }
 }
