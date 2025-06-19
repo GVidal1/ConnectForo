@@ -2,6 +2,7 @@ package com.microservicio.usuarios.microservicio_usuarios.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.microservicio.usuarios.microservicio_usuarios.client.RolClient;
 import com.microservicio.usuarios.microservicio_usuarios.model.Usuarios;
 import com.microservicio.usuarios.microservicio_usuarios.repository.UsuarioRepository;
+import com.microservicio.usuarios.microservicio_usuarios.dto.CambiarPasswordDTO;
 
 @Service
 public class UserService {
@@ -84,6 +86,53 @@ public class UserService {
             usuarioActual.setIdRol(nuevaInfo.getIdRol());
         }
 
-        return usuarioRepository.save(usuarioActual);
+        return guardarUsuario(usuarioActual);
+    }
+
+    public List<Usuarios> buscarUsuarios(String nombre, String correo) {
+        if (nombre != null && correo != null) {
+            return usuarioRepository.findByNombreUsuarioContainingOrCorreoContaining(nombre, correo);
+        } else if (nombre != null) {
+            return usuarioRepository.findByNombreUsuarioContaining(nombre);
+        } else if (correo != null) {
+            return usuarioRepository.findByCorreoContaining(correo);
+        }
+        return usuarioRepository.findAll();
+    }
+
+    public Usuarios cambiarPassword(Long idUsuario, CambiarPasswordDTO passwordDTO) {
+        Usuarios usuario = obtenerUsuarioPorId(idUsuario);
+        
+        if (!passwordEncoder.matches(passwordDTO.getPasswordActual(), usuario.getPassword())) {
+            throw new RuntimeException("La contraseña actual es incorrecta");
+        }
+        
+        if (!passwordDTO.getNuevaPassword().equals(passwordDTO.getConfirmarPassword())) {
+            throw new RuntimeException("Las contraseñas nuevas no coinciden");
+        }
+        
+        usuario.setPassword(passwordEncoder.encode(passwordDTO.getNuevaPassword()));
+        return usuarioRepository.save(usuario);
+    }
+
+    public Map<String, Object> obtenerEstadisticasUsuario(Long idUsuario) {
+        Usuarios usuario = obtenerUsuarioPorId(idUsuario);
+        Map<String, Object> estadisticas = new HashMap<>();
+        
+        estadisticas.put("id", usuario.getId());
+        estadisticas.put("nombreUsuario", usuario.getNombreUsuario());
+        estadisticas.put("correo", usuario.getCorreo());
+        estadisticas.put("fechaCreacion", usuario.getFechaCreacion());
+        estadisticas.put("rol", rolClient.obtenerRolPorId(usuario.getIdRol()));
+        
+        return estadisticas;
+    }
+
+    public void solicitarRecuperacionPassword(String correo) {
+        Usuarios usuario = obtenerUsuarioPorCorreo(correo);
+        // verificamos que el usuario existe
+        if (usuario == null) {
+            throw new RuntimeException("No se encontró ningún usuario con ese correo");
+        }
     }
 } 
