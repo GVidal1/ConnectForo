@@ -1,6 +1,7 @@
 package com.microservicio.usuarios.microservicio_usuarios.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,9 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.microservicio.usuarios.microservicio_usuarios.dto.CambiarPasswordDTO;
 import com.microservicio.usuarios.microservicio_usuarios.dto.LoginDTO;
+import com.microservicio.usuarios.microservicio_usuarios.dto.RecuperarPasswordDTO;
 import com.microservicio.usuarios.microservicio_usuarios.dto.UsuarioDTO;
 import com.microservicio.usuarios.microservicio_usuarios.model.Usuarios;
 import com.microservicio.usuarios.microservicio_usuarios.service.UserService;
@@ -44,6 +48,7 @@ public class UserController {
         return ResponseEntity.ok(usuarios);
     }
 
+    // GET - /api/usuarios/{idUsuario}
     @GetMapping("/{idUsuario}")
     public ResponseEntity<?> buscarUsuarioPorId(@PathVariable Long idUsuario) {
         try {
@@ -54,6 +59,7 @@ public class UserController {
         }
     }
 
+    // GET - /api/usuarios/rol/{idRol}
     @GetMapping("/rol/{idRol}")
     public ResponseEntity<?> buscarUsuariosPorRol(@PathVariable Long idRol) {
         try {
@@ -66,6 +72,14 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+    // POST - /api/usuarios
+    // http://localhost:8083/api/usuarios
+    //     {
+    //     "idRol": 1,
+    //     "nombreUsuario": "ejemplo",
+    //     "correo": "ejemplo@correo.com",
+    //     "password": "miclave123"
+    //   }
 
     @PostMapping
     public ResponseEntity<?> crearUsuarioDesdeDTO(@RequestBody @Valid UsuarioDTO usuarioDTO) {
@@ -85,6 +99,12 @@ public class UserController {
         }
     }
 
+    // POST - /api/usuarios/login
+    // http://localhost:8083/api/usuarios/login
+    // {
+    //     "correo": "ejemplo@correo.com",
+    //     "password": "miclave123"
+    //   }
     @PostMapping("/login")
     public ResponseEntity<?> loginUsuario(@Valid @RequestBody LoginDTO loginDTO) {
         try {
@@ -100,6 +120,18 @@ public class UserController {
         }
     }
 
+    // PUT - /api/usuarios/{idUsuario}
+    // http://localhost:8083/api/usuarios/{idUsuario}
+    // {
+    //     "id": 1,
+    //     "idRol": 2,
+    //     "nombreUsuario": "nuevoNombre",
+    //     "correo": "nuevo@correo.com",
+    //     "password": "nuevaClave",
+    //     "fechaCreacion": "2024-06-01T00:00:00",
+    //     "nombre": "Nombre",
+    //     "apellidos": "Apellido"
+    //   }
     @PutMapping("/{idUsuario}")
     public ResponseEntity<?> actualizarInformacionUsuario(
         @PathVariable Long idUsuario, 
@@ -112,6 +144,7 @@ public class UserController {
         }
     }
 
+    // DELETE - /api/usuarios/{idUsuario}
     @DeleteMapping("/{idUsuario}")
     public ResponseEntity<?> borrarUsuarioPorId(@PathVariable Long idUsuario) {
         try {
@@ -119,6 +152,67 @@ public class UserController {
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // GET - /api/usuarios/buscar?nombre=nombre&correo=correo
+    @GetMapping("/buscar")
+    public ResponseEntity<?> buscarUsuarios(
+        @RequestParam(required = false) String nombre,
+        @RequestParam(required = false) String correo) {
+        try {
+            List<Usuarios> usuarios = userService.buscarUsuarios(nombre, correo);
+            if (usuarios.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(usuarios);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    // PUT - /api/usuarios/{idUsuario}/cambiar-password
+    // http://localhost:8083/api/usuarios/{idUsuario}/cambiar-password
+    // {
+    //     "passwordActual": "miclave123",
+    //     "nuevaPassword": "nuevaClave456",
+    //     "confirmarPassword": "nuevaClave456"
+    //   }
+
+    @PutMapping("/{idUsuario}/cambiar-password")
+    public ResponseEntity<?> cambiarPassword(
+        @PathVariable Long idUsuario,
+        @RequestBody @Valid CambiarPasswordDTO passwordDTO) {
+        try {
+            Usuarios usuario = userService.cambiarPassword(idUsuario, passwordDTO);
+            return ResponseEntity.ok(usuario);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // GET - /api/usuarios/{idUsuario}/estadisticas
+    @GetMapping("/{idUsuario}/estadisticas")
+    public ResponseEntity<?> obtenerEstadisticasUsuario(@PathVariable Long idUsuario) {
+        try {
+            Map<String, Object> estadisticas = userService.obtenerEstadisticasUsuario(idUsuario);
+            return ResponseEntity.ok(estadisticas);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // POST - /api/usuarios/recuperar-password
+    // http://localhost:8083/api/usuarios/recuperar-password
+    // {
+    //     "correo": "ejemplo@correo.com"
+    //   }
+    @PostMapping("/recuperar-password")
+    public ResponseEntity<?> solicitarRecuperacionPassword(@RequestBody @Valid RecuperarPasswordDTO dto) {
+        try {
+            userService.solicitarRecuperacionPassword(dto.getCorreo());
+            return ResponseEntity.ok("Se ha enviado un correo con las instrucciones para recuperar la contraseña");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 } 
