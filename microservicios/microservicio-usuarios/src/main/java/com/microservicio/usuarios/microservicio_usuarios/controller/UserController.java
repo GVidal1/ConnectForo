@@ -108,10 +108,9 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUsuario(@Valid @RequestBody LoginDTO loginDTO) {
         try {
-            Usuarios usuario = userService.obtenerUsuarioPorCorreo(loginDTO.getCorreo());
-
-            if (passwordEncoder.matches(loginDTO.getPassword(), usuario.getPassword())) {
-                return ResponseEntity.ok("Login exitoso");  
+            boolean autenticado = userService.autenticarUsuario(loginDTO.getCorreo(), loginDTO.getPassword());
+            if (autenticado) {
+                return ResponseEntity.ok("Login exitoso");
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
             }
@@ -187,17 +186,6 @@ public class UserController {
             return ResponseEntity.ok(usuario);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    // GET - /api/usuarios/{idUsuario}/estadisticas
-    @GetMapping("/{idUsuario}/estadisticas")
-    public ResponseEntity<?> obtenerEstadisticasUsuario(@PathVariable Long idUsuario) {
-        try {
-            Map<String, Object> estadisticas = userService.obtenerEstadisticasUsuario(idUsuario);
-            return ResponseEntity.ok(estadisticas);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
