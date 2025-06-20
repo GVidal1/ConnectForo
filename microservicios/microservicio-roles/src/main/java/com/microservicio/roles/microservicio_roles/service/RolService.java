@@ -2,6 +2,8 @@ package com.microservicio.roles.microservicio_roles.service;
 
 import com.microservicio.roles.microservicio_roles.model.Rol;
 import com.microservicio.roles.microservicio_roles.repository.RolRepository;
+import com.microservicio.roles.microservicio_roles.clients.UsuarioClient;
+import com.microservicio.roles.microservicio_roles.dto.UsuarioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,9 @@ public class RolService {
 
     @Autowired
     private RolRepository rolRepository;
+
+    @Autowired
+    private UsuarioClient usuarioClient;
 
     public List<Rol> listarRoles() {
         return rolRepository.findAll();
@@ -35,5 +40,12 @@ public class RolService {
     public String borrarRol(Long idRol) {
         rolRepository.deleteById(idRol);
         return "Rol eliminado correctamente";
+    }
+
+    public List<UsuarioDTO> obtenerUsuariosPorRol(Long idRol) {
+        // Valida que el rol exista
+        this.obtenerRolPorId(idRol);
+        List<UsuarioDTO> usuarios = usuarioClient.obtenerUsuariosPorRol(idRol);
+        return usuarios;
     }
 } 
