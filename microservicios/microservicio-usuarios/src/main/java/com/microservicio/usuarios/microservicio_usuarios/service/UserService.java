@@ -2,7 +2,6 @@ package com.microservicio.usuarios.microservicio_usuarios.service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -56,7 +55,7 @@ public class UserService {
     public Usuarios guardarUsuario(Usuarios nuevoUsuario) {
         Map<String, Object> verificarRol = rolClient.obtenerRolPorId(nuevoUsuario.getIdRol());
         if (verificarRol == null || verificarRol.isEmpty()) {
-            throw new RuntimeException("El id de la publicación no se ha encontrado. No se puede crear un comentario.");
+            throw new RuntimeException("El id del rol no se ha encontrado. Ingrese un rol valido para el usuario");
         }
         
         nuevoUsuario.setPassword(passwordEncoder.encode(nuevoUsuario.getPassword()));
@@ -115,24 +114,16 @@ public class UserService {
         return usuarioRepository.save(usuario);
     }
 
-    public Map<String, Object> obtenerEstadisticasUsuario(Long idUsuario) {
-        Usuarios usuario = obtenerUsuarioPorId(idUsuario);
-        Map<String, Object> estadisticas = new HashMap<>();
-        
-        estadisticas.put("id", usuario.getId());
-        estadisticas.put("nombreUsuario", usuario.getNombreUsuario());
-        estadisticas.put("correo", usuario.getCorreo());
-        estadisticas.put("fechaCreacion", usuario.getFechaCreacion());
-        estadisticas.put("rol", rolClient.obtenerRolPorId(usuario.getIdRol()));
-        
-        return estadisticas;
-    }
-
     public void solicitarRecuperacionPassword(String correo) {
         Usuarios usuario = obtenerUsuarioPorCorreo(correo);
         // verificamos que el usuario existe
         if (usuario == null) {
             throw new RuntimeException("No se encontró ningún usuario con ese correo");
         }
+    }
+
+    public boolean autenticarUsuario(String correo, String password) {
+        Usuarios usuario = obtenerUsuarioPorCorreo(correo);
+        return passwordEncoder.matches(password, usuario.getPassword());
     }
 } 
