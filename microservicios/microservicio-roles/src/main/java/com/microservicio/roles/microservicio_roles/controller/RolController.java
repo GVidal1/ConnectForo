@@ -6,6 +6,7 @@ import com.microservicio.roles.microservicio_roles.model.Rol;
 import com.microservicio.roles.microservicio_roles.service.RolService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +19,6 @@ public class RolController {
 
     @Autowired
     private RolService rolService;
-
-    @Autowired
-    private UsuarioClient usuarioClient;
 
     @GetMapping
     public ResponseEntity<List<Rol>> listarRoles() {
@@ -44,14 +42,10 @@ public class RolController {
     @GetMapping("/{idRol}/usuarios")
     public ResponseEntity<?> obtenerUsuariosPorRol(@PathVariable Long idRol) {
         try {
-            rolService.obtenerRolPorId(idRol);
-            
-            List<UsuarioDTO> usuarios = usuarioClient.obtenerUsuariosPorRol(idRol);
-            
+            List<UsuarioDTO> usuarios = rolService.obtenerUsuariosPorRol(idRol);
             if (usuarios == null || usuarios.isEmpty()) {
                 return ResponseEntity.noContent().build();
             }
-            
             return ResponseEntity.ok(usuarios);
         } catch (RuntimeException e) {
             if (e.getMessage().contains("no encontrado")) {
@@ -77,8 +71,10 @@ public class RolController {
         try {
             Rol rolActualizado = rolService.actualizarRol(idRol, nuevaInfo);
             return ResponseEntity.ok(rolActualizado);
-        } catch (RuntimeException e) {
+        } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().body("Error al actualizar el rol: " + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -86,7 +82,7 @@ public class RolController {
     public ResponseEntity<?> borrarRol(@PathVariable Long idRol) {
         try {
             String mensaje = rolService.borrarRol(idRol);
-            return ResponseEntity.ok(mensaje);
+            return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
