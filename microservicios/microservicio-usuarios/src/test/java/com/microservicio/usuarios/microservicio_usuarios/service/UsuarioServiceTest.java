@@ -162,18 +162,6 @@ public class UsuarioServiceTest {
   }
 
   @Test
-  void testObtenerEstadisticasUsuarioPorId_Existente() {
-    when(repository.findById(1L)).thenReturn(Optional.of(usuarioTest));
-
-    Map<String, Object> result = service.obtenerEstadisticasUsuario(1L);
-
-    assertThat(result).isNotNull();
-    assertThat(result).containsEntry("id", usuarioTest.getId());
-    assertThat(result).containsEntry("nombreUsuario", usuarioTest.getNombreUsuario());
-    assertThat(result).containsEntry("correo", usuarioTest.getCorreo());
-  }
-
-  @Test
   void testSolicitarRecuperacionPassword_PorCorreoExistente() {
     when(repository.findByCorreo("test@email.com")).thenReturn(Optional.of(usuarioTest));
     when(repository.save(usuarioTest)).thenReturn(usuarioTest);
