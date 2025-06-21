@@ -20,21 +20,29 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microservicio.usuarios.microservicio_usuarios.config.SecurityConfig;
 import com.microservicio.usuarios.microservicio_usuarios.dto.CambiarPasswordDTO;
 import com.microservicio.usuarios.microservicio_usuarios.dto.LoginDTO;
+import com.microservicio.usuarios.microservicio_usuarios.dto.RecuperarPasswordDTO;
 import com.microservicio.usuarios.microservicio_usuarios.model.Usuarios;
 import com.microservicio.usuarios.microservicio_usuarios.service.UserService;
 
 @WebMvcTest(UserController.class)
+@Import(SecurityConfig.class)
 public class UsuarioControllerTest {
 
   @MockBean
   private UserService service;
+
+  @MockBean
+  private PasswordEncoder passwordEncoder;
 
   @Autowired
   private MockMvc mockMvc;
@@ -158,12 +166,12 @@ public class UsuarioControllerTest {
   @Test
   @WithMockUser
   void testRecurperarPasswordUsuarioPorCorreo_StringAndOK() throws Exception {
-    when(service.obtenerUsuarioPorCorreo("correo@test.com")).thenReturn(usuarioTest);
+    RecuperarPasswordDTO recuperarPasswordDTO = new RecuperarPasswordDTO("correo@test.com");
 
     mockMvc.perform(post("/api/usuarios/recuperar-password")
             .with(csrf())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(usuarioTest)))
+            .content(objectMapper.writeValueAsString(recuperarPasswordDTO)))
             .andExpect(status().isOk())
             .andExpect(content().string("Se ha enviado un correo con las instrucciones para recuperar la contraseña"));
   }
