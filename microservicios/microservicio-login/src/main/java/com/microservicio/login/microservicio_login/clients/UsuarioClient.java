@@ -1,6 +1,7 @@
 package com.microservicio.login.microservicio_login.clients;
 
 import com.microservicio.login.microservicio_login.dto.LoginDTO;
+import com.microservicio.login.microservicio_login.dto.RecuperarPasswordDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,6 +39,25 @@ public class UsuarioClient {
                     }
                     System.err.println("Error al verificar credenciales: " + e.getMessage());
                     return Mono.just(false);
+                });
+    }
+
+    public Mono<String> recuperarPassword(RecuperarPasswordDTO recuperarPasswordDTO) {
+        return webClient.post()
+                .uri("/api/usuarios/recuperar-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(recuperarPasswordDTO)
+                .retrieve()
+                .bodyToMono(String.class)
+                .onErrorResume(e -> {
+                    if (e instanceof WebClientResponseException) {
+                        WebClientResponseException ex = (WebClientResponseException) e;
+                        if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                            return Mono.just("Error: " + ex.getResponseBodyAsString());
+                        }
+                    }
+                    System.err.println("Error al recuperar contraseña: " + e.getMessage());
+                    return Mono.just("Error interno del servidor");
                 });
     }
 } 
