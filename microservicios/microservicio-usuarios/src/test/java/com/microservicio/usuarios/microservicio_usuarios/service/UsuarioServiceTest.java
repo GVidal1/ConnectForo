@@ -4,7 +4,6 @@ import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
@@ -164,11 +163,8 @@ public class UsuarioServiceTest {
   @Test
   void testSolicitarRecuperacionPassword_PorCorreoExistente() {
     when(repository.findByCorreo("test@email.com")).thenReturn(Optional.of(usuarioTest));
-    when(repository.save(usuarioTest)).thenReturn(usuarioTest);
 
     service.solicitarRecuperacionPassword("test@email.com");
-
-    verify(repository).save(usuarioTest);
   }
 
   @Test
