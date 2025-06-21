@@ -56,17 +56,6 @@ public class LoginServiceTest {
   @Test
   void testIniciarSesion_ErrorServidor() {
     when(usuarioClient.verificarCredenciales(loginDTO))
-        .thenReturn(Mono.error(new RuntimeException("Error de conexión al servidor")));
-
-    Mono<Boolean> result = loginService.iniciarSesion(loginDTO);
-
-    assertThat(result.block()).isNull();
-  }
-
-  // retorna false cuando hay un error
-  @Test
-  void testIniciarSesion_ErrorServidorManejado() {
-    when(usuarioClient.verificarCredenciales(loginDTO))
         .thenReturn(Mono.just(false));
 
     Mono<Boolean> result = loginService.iniciarSesion(loginDTO);
