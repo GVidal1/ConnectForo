@@ -2,6 +2,7 @@ package com.microservicio.login.microservicio_login.service;
 
 import com.microservicio.login.microservicio_login.clients.UsuarioClient;
 import com.microservicio.login.microservicio_login.dto.LoginDTO;
+import com.microservicio.login.microservicio_login.dto.RecuperarPasswordDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,18 @@ public class LoginService {
                     } else {
                         System.out.println("Login fallido para: " + loginDTO.getCorreo());
                     }
+                });
+    }
+
+    public Mono<String> recuperarPassword(RecuperarPasswordDTO recuperarPasswordDTO) {
+        return usuarioClient.recuperarPassword(recuperarPasswordDTO)
+                .doOnSuccess(result -> {
+                    System.out.println("Solicitud de recuperación de contraseña para: " + recuperarPasswordDTO.getCorreo());
+                    System.out.println("Resultado: " + result);
+                })
+                .doOnError(error -> {
+                    System.err.println("Error en recuperación de contraseña para: " + recuperarPasswordDTO.getCorreo());
+                    System.err.println("Error: " + error.getMessage());
                 });
     }
 } 
