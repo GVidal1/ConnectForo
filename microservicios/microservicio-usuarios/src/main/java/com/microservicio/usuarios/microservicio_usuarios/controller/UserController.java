@@ -1,13 +1,11 @@
 package com.microservicio.usuarios.microservicio_usuarios.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +24,6 @@ import com.microservicio.usuarios.microservicio_usuarios.model.Usuarios;
 import com.microservicio.usuarios.microservicio_usuarios.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,9 +40,6 @@ public class UserController {
     
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Operation(summary = "Obtener lista de usuarios", description = "Retorna una lista de todos los usuarios registrados en el sistema")
     @ApiResponses(value = {
@@ -76,7 +70,7 @@ public class UserController {
             examples = @ExampleObject(value = "Usuario no encontrado")))
     })
     @GetMapping("/{idUsuario}")
-    public ResponseEntity<?> buscarUsuarioPorId(@Parameter(description = "ID del usuario a buscar", example = "1") @PathVariable Long idUsuario) {
+    public ResponseEntity<?> buscarUsuarioPorId(@PathVariable Long idUsuario) {
         try {
             Usuarios usuario = userService.obtenerUsuarioPorId(idUsuario);
             return ResponseEntity.ok(usuario);
@@ -95,7 +89,7 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "Rol no encontrado")
     })
     @GetMapping("/rol/{idRol}")
-    public ResponseEntity<?> buscarUsuariosPorRol(@Parameter(description = "ID del rol para filtrar usuarios", example = "1") @PathVariable Long idRol) {
+    public ResponseEntity<?> buscarUsuariosPorRol(@PathVariable Long idRol) {
         try {
             List<Usuarios> usuarios = userService.obtenerUsuariosPorRol(idRol);
             if (usuarios.isEmpty()) {
@@ -125,7 +119,7 @@ public class UserController {
             examples = @ExampleObject(value = "El correo ya está en uso.")))
     })
     @PostMapping
-    public ResponseEntity<?> crearUsuarioDesdeDTO(@Parameter(description = "Datos del usuario a crear") @RequestBody @Valid UsuarioDTO usuarioDTO) {
+    public ResponseEntity<?> crearUsuarioDesdeDTO(@RequestBody @Valid UsuarioDTO usuarioDTO) {
         try {
             Usuarios usuario = new Usuarios();
             usuario.setIdRol(usuarioDTO.getIdRol());
@@ -158,7 +152,7 @@ public class UserController {
             examples = @ExampleObject(value = "Contraseña incorrecta")))
     })
     @PostMapping("/login")
-    public ResponseEntity<?> loginUsuario(@Parameter(description = "Credenciales de autenticación") @Valid @RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<?> loginUsuario(@Valid @RequestBody LoginDTO loginDTO) {
         try {
             boolean autenticado = userService.autenticarUsuario(loginDTO.getCorreo(), loginDTO.getPassword());
             if (autenticado) {
@@ -194,8 +188,8 @@ public class UserController {
     })
     @PutMapping("/{idUsuario}")
     public ResponseEntity<?> actualizarInformacionUsuario(
-        @Parameter(description = "ID del usuario a actualizar", example = "1") @PathVariable Long idUsuario, 
-        @Parameter(description = "Nueva información del usuario") @RequestBody @Valid Usuarios nuevaInfoUsuario) {
+        @PathVariable Long idUsuario, 
+        @RequestBody @Valid Usuarios nuevaInfoUsuario) {
         try {
             Usuarios usuarioActualzado = userService.actualizarUsuario(idUsuario, nuevaInfoUsuario);
             return ResponseEntity.ok(usuarioActualzado);
@@ -213,7 +207,7 @@ public class UserController {
             examples = @ExampleObject(value = "Usuario no encontrado")))
     })
     @DeleteMapping("/{idUsuario}")
-    public ResponseEntity<?> borrarUsuarioPorId(@Parameter(description = "ID del usuario a eliminar", example = "1") @PathVariable Long idUsuario) {
+    public ResponseEntity<?> borrarUsuarioPorId(@PathVariable Long idUsuario) {
         try {
             String resultado = userService.borrarUsuario(idUsuario);
             return ResponseEntity.noContent().build();
@@ -233,8 +227,8 @@ public class UserController {
     })
     @GetMapping("/buscar")
     public ResponseEntity<?> buscarUsuarios(
-        @Parameter(description = "Nombre del usuario (opcional)", example = "Juan") @RequestParam(required = false) String nombre,
-        @Parameter(description = "Correo del usuario (opcional)", example = "juan@email.com") @RequestParam(required = false) String correo) {
+        @RequestParam(required = false) String nombre,
+        @RequestParam(required = false) String correo) {
         try {
             List<Usuarios> usuarios = userService.buscarUsuarios(nombre, correo);
             if (usuarios.isEmpty()) {
@@ -264,8 +258,8 @@ public class UserController {
     })
     @PutMapping("/{idUsuario}/cambiar-password")
     public ResponseEntity<?> cambiarPassword(
-        @Parameter(description = "ID del usuario", example = "1") @PathVariable Long idUsuario,
-        @Parameter(description = "Datos para cambiar contraseña") @RequestBody @Valid CambiarPasswordDTO passwordDTO) {
+        @PathVariable Long idUsuario,
+        @RequestBody @Valid CambiarPasswordDTO passwordDTO) {
         try {
             Usuarios usuario = userService.cambiarPassword(idUsuario, passwordDTO);
             return ResponseEntity.ok(usuario);
@@ -289,7 +283,7 @@ public class UserController {
             examples = @ExampleObject(value = "Usuario no encontrado")))
     })
     @PostMapping("/recuperar-password")
-    public ResponseEntity<?> solicitarRecuperacionPassword(@Parameter(description = "Datos para recuperar contraseña") @RequestBody @Valid RecuperarPasswordDTO dto) {
+    public ResponseEntity<?> solicitarRecuperacionPassword(@RequestBody @Valid RecuperarPasswordDTO dto) {
         try {
             userService.solicitarRecuperacionPassword(dto.getCorreo());
             return ResponseEntity.ok("Se ha enviado un correo con las instrucciones para recuperar la contraseña");
