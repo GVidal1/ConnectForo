@@ -45,7 +45,6 @@ public class Usuarios {
 
     @NotBlank(message = "La contraseña no puede estar vacía.")
     @Size(min = 3, max = 100, message = "La contraseña debe contener entre 3 y 100 caracteres (encriptada).")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false, length = 100)
     @Schema(description = "Contraseña del usuario (encriptada)", example = "password123", minLength = 3, maxLength = 100)
     private String password;
