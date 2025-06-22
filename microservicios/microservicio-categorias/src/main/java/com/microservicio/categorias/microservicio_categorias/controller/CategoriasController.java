@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.microservicio.categorias.microservicio_categorias.services.CategoriasService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -119,7 +117,7 @@ public class CategoriasController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-    
+
     // http://localhost:8084/api/categorias/buscar/titulo?titulo=Frontend
     @Operation(summary = "Buscar categorías por título", description = "Busca categorías que contengan el título especificado")
     @ApiResponses(value = {
