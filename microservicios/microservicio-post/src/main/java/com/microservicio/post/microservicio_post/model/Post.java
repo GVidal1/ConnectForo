@@ -38,7 +38,6 @@ public class Post {
   private String titulo;
 
   @NotBlank(message = "El contenido no puede estar vacío")
-  @Lob  
   @Column(nullable = false)
   @Schema(description = "Contenido de la publicación", example = "Este es el contenido de mi primera publicación en el foro", required = true)
   private String contenido;
