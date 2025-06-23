@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservicio.registro.microservicio_registro.config.SecurityConfig;
 import com.microservicio.registro.microservicio_registro.dto.UsuarioDTO;
+import com.microservicio.registro.microservicio_registro.dto.UsuarioRespuestaDTO;
 import com.microservicio.registro.microservicio_registro.service.RegistroService;
 
 @WebMvcTest(RegistroController.class)
@@ -47,7 +48,9 @@ public class RegistroControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(usuarioTest)))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.idRol").value(1L));
+            .andExpect(jsonPath("$.idRol").value(1L))
+            .andExpect(jsonPath("$.nombreUsuario").value("usuarioTest"))
+            .andExpect(jsonPath("$.correo").value("correo@test.com"));
   }
 
   @Test

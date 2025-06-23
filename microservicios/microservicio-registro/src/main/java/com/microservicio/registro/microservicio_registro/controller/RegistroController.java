@@ -2,6 +2,7 @@ package com.microservicio.registro.microservicio_registro.controller;
 
 import com.microservicio.registro.microservicio_registro.service.RegistroService;
 import com.microservicio.registro.microservicio_registro.dto.UsuarioDTO;
+import com.microservicio.registro.microservicio_registro.dto.UsuarioRespuestaDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -30,7 +31,7 @@ public class RegistroController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Usuario registrado exitosamente",
             content = @Content(mediaType = "application/json", 
-            schema = @Schema(implementation = UsuarioDTO.class))),
+            schema = @Schema(implementation = UsuarioRespuestaDTO.class))),
         @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos",
             content = @Content(mediaType = "text/plain", 
             examples = @ExampleObject(value = "Error al registrar: El correo ya está en uso"))),
@@ -42,7 +43,12 @@ public class RegistroController {
     public ResponseEntity<?> registrarUsuario(@Valid @RequestBody UsuarioDTO usuario) {
         try {
             UsuarioDTO nuevoRegistro = registroService.registrarUsuario(usuario);
-            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoRegistro);
+            UsuarioRespuestaDTO respuesta = new UsuarioRespuestaDTO(
+                nuevoRegistro.getIdRol(),
+                nuevoRegistro.getNombreUsuario(),
+                nuevoRegistro.getCorreo()
+            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Error al registrar: " + e.getMessage());
